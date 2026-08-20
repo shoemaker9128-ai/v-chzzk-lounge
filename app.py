@@ -65,16 +65,42 @@ st.markdown("""
     .badge-viewers { background-color: rgba(15, 16, 21, 0.95); border-top: 1px solid rgba(255, 255, 255, 0.2); border-bottom: 1px solid rgba(255, 255, 255, 0.2); border-right: 1px solid rgba(255, 255, 255, 0.2); color: #FFFFFF; padding: 4px 6px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; font-size: 0.65rem; font-weight: 700; box-shadow: 0 2px 4px rgba(0,0,0,0.4); display: flex; align-items: center; line-height: 1; }
     .tag-badge { display: inline-block; background: rgba(0, 255, 163, 0.08); color: #00FFA3; border: 1px solid rgba(0, 255, 163, 0.35); padding: 2px 5px; border-radius: 5px; font-size: 0.65rem; margin: 3px 3px 0 0; }
     
-    /* 알약(Pill) 모양의 즐겨찾기 버튼 스타일 */
     .bm-btn { display: flex; align-items: center; justify-content: center; width: 32px; height: 24px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.15); background-color: transparent; transition: all 0.2s ease; }
     .bm-btn-active { display: flex; align-items: center; justify-content: center; width: 32px; height: 24px; border-radius: 12px; border: 1px solid rgba(0, 255, 163, 0.5); background-color: rgba(0, 255, 163, 0.1); transition: all 0.2s ease; }
 
-    /* 하단 네비게이션 바 중앙 고정 */
     .bottom-nav-container { position: fixed !important; bottom: 0 !important; left: 50% !important; transform: translateX(-50%) !important; width: 100% !important; max-width: 420px !important; background: rgba(24, 26, 32, 0.95) !important; backdrop-filter: blur(16px) !important; -webkit-backdrop-filter: blur(16px) !important; border-top: 1px solid rgba(255, 255, 255, 0.1) !important; border-left: 1px solid rgba(255, 255, 255, 0.05) !important; border-right: 1px solid rgba(255, 255, 255, 0.05) !important; box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.6) !important; display: flex !important; justify-content: space-around !important; padding: 10px 0 10px 0 !important; z-index: 900 !important; }
     .bottom-nav-item { color: #525C6D !important; text-decoration: none !important; display: flex; flex-direction: column; align-items: center; gap: 4px; transition: all 0.2s ease; }
     .bottom-nav-item.active { color: #00FFA3 !important; }
     .bottom-nav-item.active svg { transform: scale(1.15); filter: drop-shadow(0 0 6px rgba(0, 255, 163, 0.6)); }
     .bottom-nav-item.active span { font-weight: 800 !important; filter: drop-shadow(0 0 4px rgba(0, 255, 163, 0.3)); }
+
+    /* 🚨 스트림릿 에러를 원천 차단하는 가장 안전하고 깔끔한 썸네일 전용 CSS */
+    .stream-img {
+        width: 100%;
+        height: 100%;
+        aspect-ratio: 16/9;
+        object-fit: cover;
+        display: block;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+        background-color: #1C1E26;
+        color: transparent; /* 이미지가 깨질 때 나오는 지저분한 텍스트 숨김 */
+        position: relative;
+    }
+    /* 🚨 이미지가 로딩 실패(엑스박스)했을 때만 자동으로 덮어씌워지는 대체 UI */
+    .stream-img::before {
+        content: "화면 준비 중";
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background-color: #1C1E26;
+        color: #525C6D;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.9rem;
+        font-weight: 700;
+        z-index: 10;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -88,9 +114,7 @@ SVG_ICONS = {
     "my": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:100%; height:100%;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>',
     "my_fill": '<svg viewBox="0 0 24 24" fill="#00FFA3" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:100%;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>',
     "star": '<svg viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px; height:14px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>',
-    "star_fill": '<svg viewBox="0 0 24 24" fill="#00FFA3" xmlns="http://www.w3.org/2000/svg" style="width:14px; height:14px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>',
-    "monitor": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:32px; height:32px; margin-bottom:8px; opacity:0.5;"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>',
-    "play_empty": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px; height:18px; opacity:0.5;"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>'
+    "star_fill": '<svg viewBox="0 0 24 24" fill="#00FFA3" xmlns="http://www.w3.org/2000/svg" style="width:14px; height:14px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>'
 }
 
 # ----------------------------------------------------
@@ -218,6 +242,7 @@ if current_nav == "live":
         viewer_count = live.get("viewer_count", 0)
         formatted_viewers = f"{viewer_count:,}명"
         
+        # 🚨 파이썬 방어: 치지직 API의 가짜 글자를 480 픽셀 주소로 강제 복구
         thumb = live.get("thumbnail_url", "")
         if thumb:
             thumb = thumb.replace("{resolution}", "480").replace("{}", "480")
@@ -237,7 +262,7 @@ if current_nav == "live":
         else: temp_bms[ch_id] = ch_name
         toggle_url = build_url("live", current_sort, temp_bms)
         
-        # 🚨 [핵심 업데이트] 2중 레이어 구조 적용: 바닥에 '화면 준비 중'을 깔고, 위에 이미지를 덮음
+        # 🚨 HTML 안에는 오직 깔끔한 class명(stream-img)만 남겨서 에러를 원천 봉쇄했습니다.
         card_html = f'''
         <div class="{card_class}">
             <div class="overlay-badges-container">
@@ -245,17 +270,7 @@ if current_nav == "live":
                 <span class="badge-viewers">{formatted_viewers}</span>
             </div>
             <a href="https://chzzk.naver.com/live/{ch_id}" target="_blank" style="text-decoration:none; color:inherit; display:block;">
-                <div style="position:relative; width:100%; aspect-ratio:16/9; background:#1C1E26; border-bottom: 1px solid rgba(255,255,255,0.05); overflow:hidden; display:flex; align-items:center; justify-content:center;">
-                    
-                    <!-- 1층(바닥): 이미지가 깨졌을 때 보여질 예쁜 가짜 썸네일 UI -->
-                    <div style="position:absolute; z-index:1; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#525C6D;">
-                        {SVG_ICONS['monitor']}
-                        <span style="font-size:0.85rem; font-weight:700;">화면 준비 중</span>
-                    </div>
-                    
-                    <!-- 2층(위): 실제 이미지. 깨지면 투명해져서 바닥이 비쳐 보임 -->
-                    <img src="{thumb}" referrerpolicy="no-referrer" style="position:relative; z-index:2; width:100%; height:100%; object-fit:cover; color:transparent; background:transparent;" alt="">
-                </div>
+                <img src="{thumb}" referrerpolicy="no-referrer" class="stream-img" alt="">
                 <div style="padding: 12px 14px 6px 14px;">
                     <div style="font-weight:700; font-size:1.05rem; color: #FFFFFF; line-height: 1.4;">{html.escape(title)}</div>
                 </div>
@@ -305,15 +320,12 @@ elif current_nav == "clip":
                     
                     margin_style = "margin-bottom: 12px;" if i == 0 and len(videos) > 1 else ""
                     
-                    # 🚨 핫클립 탭에도 동일한 2중 레이어 구조 적용
+                    # 🚨 핫클립 탭에도 동일한 방어막 적용 완료
                     card_html += f'''<a href="https://chzzk.naver.com/video/{v_id}" target="_blank" style="text-decoration:none; color:inherit; display:block; {margin_style}">
                         <div style="display:flex; gap:12px; align-items:center;">
-                            <div style="width:105px; height:58px; background:#1C1E26; border-radius:6px; display:flex; align-items:center; justify-content:center; flex-shrink:0; position:relative; overflow:hidden;">
-                                <div style="position:absolute; z-index:1; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#525C6D;">
-                                    {SVG_ICONS['play_empty']}
-                                </div>
-                                <img src="{v_thumb}" referrerpolicy="no-referrer" style="position:relative; z-index:2; width:100%; height:100%; object-fit:cover; color:transparent; background:transparent;" alt="">
-                                <span style="position:absolute; background:rgba(0,0,0,0.8); color:#FFF; font-size:0.6rem; padding:2px 4px; border-radius:3px; bottom:4px; right:4px; font-weight:600; line-height:1; z-index:3;">재생</span>
+                            <div style="width:105px; height:58px; border-radius:6px; flex-shrink:0; position:relative; overflow:hidden;">
+                                <img src="{v_thumb}" referrerpolicy="no-referrer" class="stream-img" style="border-bottom:none; aspect-ratio:auto;" alt="">
+                                <span style="position:absolute; background:rgba(0,0,0,0.8); color:#FFF; font-size:0.6rem; padding:2px 4px; border-radius:3px; bottom:4px; right:4px; font-weight:600; line-height:1; z-index:11;">재생</span>
                             </div>
                             <div style="flex:1; min-width:0;">
                                 <div style="font-weight:700; color:#FFFFFF; font-size:1.0rem; margin-bottom:6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; line-height:1.2;">{html.escape(v_title)}</div>
