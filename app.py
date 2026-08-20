@@ -25,9 +25,9 @@ st.markdown("""
 
     @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
     
-    /* 🚨 PC 모니터의 남는 바깥쪽 여백은 완전한 검은색으로 처리 */
-    html, body {
-        background-color: #000000 !important;
+    /* 🚨 PC 모니터 전체 배경을 완전한 딥블랙(#090A0F)으로 통일 */
+    html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
+        background-color: #090A0F !important;
     }
     
     [class*="css"], .stApp {
@@ -36,7 +36,7 @@ st.markdown("""
         color: #F3F4F6 !important;
     }
 
-    /* 🚨 앱 화면(스마트폰 영역)을 420px로 완벽하게 가두고 중앙에 배치 */
+    /* 🚨 둥둥 떠 보이던 이중 박스 현상을 없애고, 완벽한 모바일 프레임 몰입감 제공 */
     .block-container {
         padding-top: 1.5rem;
         padding-bottom: 5.5rem; 
@@ -44,9 +44,9 @@ st.markdown("""
         margin: 0 auto !important;
         background-color: #0F1015 !important;
         min-height: 100vh !important;
-        border-left: 1px solid rgba(255, 255, 255, 0.05);
-        border-right: 1px solid rgba(255, 255, 255, 0.05);
-        box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+        border-left: 1px solid rgba(255, 255, 255, 0.08);
+        border-right: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 0 0 40px rgba(0, 0, 0, 0.9);
     }
 
     .app-header-container {
@@ -210,7 +210,7 @@ st.markdown("""
         margin: 3px 3px 0 0; 
     }
 
-    /* 🚨 하단 네비게이션 바도 420px로 잠그고 모니터 정중앙에 고정 */
+    /* 🚨 하단 네비게이션 바 고정 */
     .bottom-nav-container {
         position: fixed !important;
         bottom: 0 !important;
@@ -222,8 +222,8 @@ st.markdown("""
         backdrop-filter: blur(16px) !important;
         -webkit-backdrop-filter: blur(16px) !important;
         border-top: 1px solid rgba(255, 255, 255, 0.1) !important; 
-        border-left: 1px solid rgba(255, 255, 255, 0.05) !important;
-        border-right: 1px solid rgba(255, 255, 255, 0.05) !important;
+        border-left: 1px solid rgba(255, 255, 255, 0.08) !important;
+        border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
         box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.6) !important; 
         display: flex !important;
         justify-content: space-around !important;
