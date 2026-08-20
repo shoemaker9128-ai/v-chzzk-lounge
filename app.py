@@ -45,18 +45,19 @@ st.markdown("""
         padding: 4px 4px 16px 4px;
         margin-bottom: 16px;
         border-bottom: 1px solid rgba(255, 255, 255, 0.05); 
+        gap: 12px; /* 🚨 PC 화면을 위해 로고와 서브타이틀 사이 여백을 넉넉히 확보 */
     }
     .app-logo {
-        font-size: clamp(1.6rem, 9vw, 2.2rem); /* 로고 크기를 더 크고 시원하게 확대 */
+        font-size: clamp(1.6rem, 9vw, 2.2rem); 
         font-weight: 900;
-        letter-spacing: 0.5px; /* 자간을 살짝 벌려줌 */
+        letter-spacing: 0.5px; 
         color: #FFFFFF;
         line-height: 1;
         font-style: italic; 
-        padding-right: 4px;
         white-space: nowrap; 
-        transform: scaleX(1.08); /* 로고를 좌우로 살짝 더 넓게(Wide) 만듦 */
+        transform: scaleX(1.08); 
         transform-origin: left center;
+        flex-shrink: 0; /* 🚨 창이 좁아져도 로고가 찌그러지지 않게 보호 */
     }
     .app-logo span {
         color: #00FFA3;
@@ -67,20 +68,20 @@ st.markdown("""
         align-items: center;
         background-color: rgba(255, 255, 255, 0.03); 
         border: 1px solid rgba(255, 255, 255, 0.08); 
-        padding: 4px 8px; 
+        padding: 6px 10px; /* 🚨 뱃지 크기를 모바일/PC 균형에 맞게 살짝 키움 */
         border-radius: 20px;
-        font-size: 0.7rem; 
+        font-size: clamp(0.7rem, 3.5vw, 0.8rem); /* 🚨 뱃지 글자 크기도 화면에 맞춰 반응형 적용 */
         color: #9CA3AF; 
         font-weight: 600;
         letter-spacing: -0.3px; 
         line-height: 1;
         white-space: nowrap;
-        flex-shrink: 0; 
+        flex-shrink: 1; /* 🚨 필요하면 줄어들 수 있도록 유연성 부여 */
     }
     .app-subtitle-badge span {
         color: #00FFA3;
         font-size: 0.4rem;
-        margin-right: 4px;
+        margin-right: 6px; /* 점과 텍스트 사이 간격 미세 조정 */
     }
 
     .custom-segment-box {
@@ -388,7 +389,7 @@ if current_nav == "live":
         else: temp_bms[ch_id] = ch_name
         toggle_url = build_url("live", current_sort, temp_bms)
         
-        # 🚨 translateY(-2px) 적용: 별을 1px 더 위로 올려서 텍스트와 완벽하게 중앙을 맞췄습니다.
+        # 🚨 width:14px; height:14px; 별 아이콘 크기를 더 작고 귀엽게 축소
         card_html = f'''
         <div class="{card_class}">
             <div class="overlay-badges-container">
@@ -403,7 +404,7 @@ if current_nav == "live":
             </a>
             <div style="padding: 0 14px 12px 14px;">
                 <div style="display:flex; align-items:center; gap:4px;">
-                    <a href="{toggle_url}" target="_self" style="text-decoration:none; color:#9CA3AF; display:flex; align-items:center; justify-content:center; width:16px; height:16px; flex-shrink:0; transform: translateY(-2px);">{bm_svg}</a>
+                    <a href="{toggle_url}" target="_self" style="text-decoration:none; color:#9CA3AF; display:flex; align-items:center; justify-content:center; width:14px; height:14px; flex-shrink:0; transform: translateY(-2px);">{bm_svg}</a>
                     <a href="https://chzzk.naver.com/live/{ch_id}" target="_blank" style="text-decoration:none; font-weight:700; color:#00FFA3; font-size:0.85rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; line-height:1; display:flex; align-items:center;">{html.escape(ch_name)}</a>
                 </div>
                 <div style="margin-top:6px;">{tags_html}</div>
@@ -431,7 +432,8 @@ elif current_nav == "clip":
             if b_id in temp_bms: del temp_bms[b_id]
             toggle_url = build_url("clip", current_sort, temp_bms)
             
-            card_html = f'''<div class="content-card"><div style="display:flex; align-items:center; gap:4px; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.05);"><a href="{toggle_url}" target="_self" style="text-decoration:none; color:#00FFA3; width:16px; height:16px; flex-shrink:0; display:flex; align-items:center; justify-content:center; transform: translateY(-2px);">{SVG_ICONS['my_fill']}</a><div style="display:flex; align-items:center; gap:4px;"><span style="font-weight: 700; color: #00FFA3; font-size: 0.95rem; line-height:1; display:flex; align-items:center;">{html.escape(b_name)}</span><span style="font-weight: 600; color: #E5E7EB; font-size: 0.8rem; line-height:1; display:flex; align-items:center;">님의 최신 영상</span></div></div>'''
+            # 🚨 핫클립 탭: 꽉 찬 별 크기도 14px로 축소
+            card_html = f'''<div class="content-card"><div style="display:flex; align-items:center; gap:4px; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.05);"><a href="{toggle_url}" target="_self" style="text-decoration:none; color:#00FFA3; width:14px; height:14px; flex-shrink:0; display:flex; align-items:center; justify-content:center; transform: translateY(-2px);">{SVG_ICONS['my_fill']}</a><div style="display:flex; align-items:center; gap:4px;"><span style="font-weight: 700; color: #00FFA3; font-size: 0.95rem; line-height:1; display:flex; align-items:center;">{html.escape(b_name)}</span><span style="font-weight: 600; color: #E5E7EB; font-size: 0.8rem; line-height:1; display:flex; align-items:center;">님의 최신 영상</span></div></div>'''
             
             if videos:
                 for i, v in enumerate(videos):
@@ -491,7 +493,8 @@ elif current_nav == "my":
             if b_id in temp_bms: del temp_bms[b_id]
             toggle_url = build_url("my", current_sort, temp_bms)
             
-            st.markdown(f'''<div class="content-card" style="display:flex; justify-content:space-between; align-items:center; padding: 14px;"><div style="display:flex; align-items:flex-start; gap:4px;"><a href="{toggle_url}" target="_self" style="text-decoration:none; color:#00FFA3; width:16px; height:16px; flex-shrink:0; display:flex; align-items:center; justify-content:center; transform: translateY(-2px);">{SVG_ICONS['my_fill']}</a><div><div style="font-weight:700; color:#00FFA3; font-size:0.95rem; line-height:1; margin-bottom:6px; display:flex; align-items:center;">{html.escape(b_name)}</div><div style="font-size:0.75rem; color:#9CA3AF; font-weight:500; line-height:1;">채널 ID: {b_id}</div></div></div><a href="https://chzzk.naver.com/live/{b_id}" target="_blank" style="text-decoration:none; background:rgba(0,255,163,0.1); color:#00FFA3; border:1px solid rgba(0,255,163,0.4); padding:6px 14px; border-radius:6px; font-size:0.8rem; font-weight:700; transition:all 0.2s; line-height:1;">방송 보기</a></div>''', unsafe_allow_html=True)
+            # 🚨 마이 탭: 꽉 찬 별 크기도 14px로 축소
+            st.markdown(f'''<div class="content-card" style="display:flex; justify-content:space-between; align-items:center; padding: 14px;"><div style="display:flex; align-items:flex-start; gap:4px;"><a href="{toggle_url}" target="_self" style="text-decoration:none; color:#00FFA3; width:14px; height:14px; flex-shrink:0; display:flex; align-items:center; justify-content:center; transform: translateY(-2px);">{SVG_ICONS['my_fill']}</a><div><div style="font-weight:700; color:#00FFA3; font-size:0.95rem; line-height:1; margin-bottom:6px; display:flex; align-items:center;">{html.escape(b_name)}</div><div style="font-size:0.75rem; color:#9CA3AF; font-weight:500; line-height:1;">채널 ID: {b_id}</div></div></div><a href="https://chzzk.naver.com/live/{b_id}" target="_blank" style="text-decoration:none; background:rgba(0,255,163,0.1); color:#00FFA3; border:1px solid rgba(0,255,163,0.4); padding:6px 14px; border-radius:6px; font-size:0.8rem; font-weight:700; transition:all 0.2s; line-height:1;">방송 보기</a></div>''', unsafe_allow_html=True)
 
 # ----------------------------------------------------
 # 6. 하단 고정 네비게이션 바
