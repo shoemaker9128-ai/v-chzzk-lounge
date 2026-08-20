@@ -19,17 +19,17 @@ st.set_page_config(
 # ----------------------------------------------------
 st.markdown("""
 <style>
-    /* 기본 UI 숨김 */
+    /* 전체 배경을 딥블랙으로 고정 */
+    [data-testid="stAppViewContainer"], [data-testid="stMain"], .stApp {
+        background-color: #090A0F !important;
+    }
+    
+    /* 헤더 및 불필요한 요소 숨김 */
     header[data-testid="stHeader"] { display: none !important; }
     #MainMenu { visibility: hidden !important; }
     footer { display: none !important; }
 
     @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
-    
-    /* PC 여백을 딥블랙으로 안전하게 칠하는 코드 */
-    [data-testid="stAppViewContainer"] {
-        background-color: #090A0F !important;
-    }
     
     html, body, [class*="css"], .stApp {
         font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif !important;
@@ -49,200 +49,50 @@ st.markdown("""
         box-shadow: 0 0 30px rgba(0, 0, 0, 0.8) !important;
     }
 
-    .app-header-container {
-        display: flex;
-        justify-content: space-between;
-        align-items: center; 
-        padding: 4px 4px 16px 4px;
-        margin-bottom: 16px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05); 
-        gap: 12px; 
-    }
-    .app-logo {
-        font-size: clamp(1.6rem, 9vw, 2.2rem); 
-        font-weight: 900;
-        letter-spacing: 0.5px; 
-        color: #FFFFFF;
-        line-height: 1;
-        font-style: italic; 
-        white-space: nowrap; 
-        transform: scaleX(1.08); 
-        transform-origin: left center;
-        flex-shrink: 0; 
-    }
-    .app-logo span {
-        color: #00FFA3;
-        text-shadow: 0 0 12px rgba(0, 255, 163, 0.4); 
-    }
-    .app-subtitle-badge {
+    .app-header-container { display: flex; justify-content: space-between; align-items: center; padding: 4px 4px 16px 4px; margin-bottom: 16px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); gap: 12px; }
+    .app-logo { font-size: clamp(1.6rem, 9vw, 2.2rem); font-weight: 900; letter-spacing: 0.5px; color: #FFFFFF; line-height: 1; font-style: italic; white-space: nowrap; transform: scaleX(1.08); transform-origin: left center; flex-shrink: 0; }
+    .app-logo span { color: #00FFA3; text-shadow: 0 0 12px rgba(0, 255, 163, 0.4); }
+    .app-subtitle-badge { display: flex; align-items: center; background-color: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); padding: 6px 10px; border-radius: 20px; font-size: clamp(0.7rem, 3.5vw, 0.8rem); color: #9CA3AF; font-weight: 600; letter-spacing: -0.3px; line-height: 1; white-space: nowrap; flex-shrink: 1; }
+    .app-subtitle-badge span { color: #00FFA3; font-size: 0.4rem; margin-right: 6px; }
+    .custom-segment-box { display: flex !important; flex-direction: row !important; justify-content: space-between !important; align-items: center !important; width: 100%; margin-bottom: 14px; background-color: #1C1E26; border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 10px; padding: 3px; gap: 3px; }
+    .segment-tab { flex: 1; text-align: center; padding: 7px 0 !important; font-size: 0.75rem !important; font-weight: 700; text-decoration: none !important; color: #9CA3AF !important; border-radius: 7px; display: block; line-height: 1.2; transition: all 0.2s ease; }
+    .segment-tab.active { background-color: #00FFA3 !important; color: #111111 !important; }
+    .stream-card { position: relative !important; border: 1px solid rgba(255, 255, 255, 0.15) !important; background: #1C1E26 !important; border-radius: 14px; margin-bottom: 16px !important; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4); overflow: hidden; }
+    .stream-card-random { position: relative !important; border: 2px solid #00FFA3 !important; background: #1C1E26 !important; border-radius: 14px; margin-bottom: 16px !important; box-shadow: 0 4px 12px rgba(0, 255, 163, 0.15); overflow: hidden; }
+    .content-card { background-color: #1C1E26; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 12px 14px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); }
+    .overlay-badges-container { position: absolute; top: 10px; left: 10px; display: flex; align-items: center; gap: 0px; z-index: 10; pointer-events: none; }
+    .badge-live { background-color: #FF3333; color: #FFFFFF; padding: 4px 6px; border-top-left-radius: 5px; border-bottom-left-radius: 5px; font-size: 0.65rem; font-weight: 800; letter-spacing: 0.3px; box-shadow: 0 2px 4px rgba(0,0,0,0.4); display: flex; align-items: center; line-height: 1; }
+    .badge-viewers { background-color: rgba(15, 16, 21, 0.95); border-top: 1px solid rgba(255, 255, 255, 0.2); border-bottom: 1px solid rgba(255, 255, 255, 0.2); border-right: 1px solid rgba(255, 255, 255, 0.2); color: #FFFFFF; padding: 4px 6px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; font-size: 0.65rem; font-weight: 700; box-shadow: 0 2px 4px rgba(0,0,0,0.4); display: flex; align-items: center; line-height: 1; }
+    .tag-badge { display: inline-block; background: rgba(0, 255, 163, 0.08); color: #00FFA3; border: 1px solid rgba(0, 255, 163, 0.35); padding: 2px 5px; border-radius: 5px; font-size: 0.65rem; margin: 3px 3px 0 0; }
+    
+    /* 🚨 새롭게 디자인된 알약(Pill) 모양의 즐겨찾기 버튼 스타일 */
+    .bm-btn {
         display: flex;
         align-items: center;
-        background-color: rgba(255, 255, 255, 0.03); 
-        border: 1px solid rgba(255, 255, 255, 0.08); 
-        padding: 6px 10px; 
-        border-radius: 20px;
-        font-size: clamp(0.7rem, 3.5vw, 0.8rem); 
-        color: #9CA3AF; 
-        font-weight: 600;
-        letter-spacing: -0.3px; 
-        line-height: 1;
-        white-space: nowrap;
-        flex-shrink: 1; 
-    }
-    .app-subtitle-badge span {
-        color: #00FFA3;
-        font-size: 0.4rem;
-        margin-right: 6px; 
-    }
-
-    .custom-segment-box {
-        display: flex !important;
-        flex-direction: row !important;
-        justify-content: space-between !important;
-        align-items: center !important;
-        width: 100%;
-        margin-bottom: 14px;
-        background-color: #1C1E26;
+        justify-content: center;
+        width: 32px;
+        height: 24px;
+        border-radius: 12px;
         border: 1px solid rgba(255, 255, 255, 0.15);
-        border-radius: 10px;
-        padding: 3px;
-        gap: 3px;
-    }
-    
-    .segment-tab {
-        flex: 1;
-        text-align: center;
-        padding: 7px 0 !important;
-        font-size: 0.75rem !important;
-        font-weight: 700;
-        text-decoration: none !important;
-        color: #9CA3AF !important;
-        border-radius: 7px;
-        display: block;
-        line-height: 1.2;
+        background-color: transparent;
         transition: all 0.2s ease;
     }
-    
-    .segment-tab.active {
-        background-color: #00FFA3 !important;
-        color: #111111 !important;
-    }
-
-    .stream-card { 
-        position: relative !important;
-        border: 1px solid rgba(255, 255, 255, 0.15) !important; 
-        background: #1C1E26 !important; 
-        border-radius: 14px; 
-        margin-bottom: 16px !important; 
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-        overflow: hidden; 
-    }
-    .stream-card-random { 
-        position: relative !important;
-        border: 2px solid #00FFA3 !important; 
-        background: #1C1E26 !important; 
-        border-radius: 14px; 
-        margin-bottom: 16px !important; 
-        box-shadow: 0 4px 12px rgba(0, 255, 163, 0.15);
-        overflow: hidden;
-    }
-
-    .content-card {
-        background-color: #1C1E26;
-        border: 1px solid rgba(255, 255, 255, 0.08);
+    .bm-btn-active {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 24px;
         border-radius: 12px;
-        padding: 12px 14px;
-        margin-bottom: 12px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    }
-    
-    .overlay-badges-container {
-        position: absolute;
-        top: 10px;
-        left: 10px;
-        display: flex;
-        align-items: center;
-        gap: 0px;
-        z-index: 10;
-        pointer-events: none;
-    }
-    
-    .badge-live {
-        background-color: #FF3333;
-        color: #FFFFFF;
-        padding: 4px 6px;
-        border-top-left-radius: 5px;
-        border-bottom-left-radius: 5px;
-        font-size: 0.65rem;
-        font-weight: 800;
-        letter-spacing: 0.3px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.4);
-        display: flex;
-        align-items: center;
-        line-height: 1;
-    }
-
-    .badge-viewers {
-        background-color: rgba(15, 16, 21, 0.95);
-        border-top: 1px solid rgba(255, 255, 255, 0.2);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-        border-right: 1px solid rgba(255, 255, 255, 0.2);
-        color: #FFFFFF;
-        padding: 4px 6px;
-        border-top-right-radius: 5px;
-        border-bottom-right-radius: 5px;
-        font-size: 0.65rem;
-        font-weight: 700;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.4);
-        display: flex;
-        align-items: center;
-        line-height: 1;
-    }
-
-    .tag-badge { 
-        display: inline-block; 
-        background: rgba(0, 255, 163, 0.08); 
-        color: #00FFA3; 
-        border: 1px solid rgba(0, 255, 163, 0.35); 
-        padding: 2px 5px; 
-        border-radius: 5px; 
-        font-size: 0.65rem; 
-        margin: 3px 3px 0 0; 
+        border: 1px solid rgba(0, 255, 163, 0.5);
+        background-color: rgba(0, 255, 163, 0.1);
+        transition: all 0.2s ease;
     }
 
     /* 하단 네비게이션 바 중앙 고정 */
-    .bottom-nav-container {
-        position: fixed !important;
-        bottom: 0 !important;
-        left: 50% !important; 
-        transform: translateX(-50%) !important; 
-        width: 100% !important;
-        max-width: 420px !important; 
-        background: rgba(24, 26, 32, 0.95) !important; 
-        backdrop-filter: blur(16px) !important;
-        -webkit-backdrop-filter: blur(16px) !important;
-        border-top: 1px solid rgba(255, 255, 255, 0.1) !important; 
-        border-left: 1px solid rgba(255, 255, 255, 0.05) !important;
-        border-right: 1px solid rgba(255, 255, 255, 0.05) !important;
-        box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.6) !important; 
-        display: flex !important;
-        justify-content: space-around !important;
-        padding: 10px 0 10px 0 !important; 
-        z-index: 900 !important;
-    }
-    
-    .bottom-nav-item { 
-        color: #525C6D !important; 
-        text-decoration: none !important; 
-        display: flex; 
-        flex-direction: column; 
-        align-items: center; 
-        gap: 4px;
-        transition: all 0.2s ease;
-    }
-    
+    .bottom-nav-container { position: fixed !important; bottom: 0 !important; left: 50% !important; transform: translateX(-50%) !important; width: 100% !important; max-width: 420px !important; background: rgba(24, 26, 32, 0.95) !important; backdrop-filter: blur(16px) !important; -webkit-backdrop-filter: blur(16px) !important; border-top: 1px solid rgba(255, 255, 255, 0.1) !important; border-left: 1px solid rgba(255, 255, 255, 0.05) !important; border-right: 1px solid rgba(255, 255, 255, 0.05) !important; box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.6) !important; display: flex !important; justify-content: space-around !important; padding: 10px 0 10px 0 !important; z-index: 900 !important; }
+    .bottom-nav-item { color: #525C6D !important; text-decoration: none !important; display: flex; flex-direction: column; align-items: center; gap: 4px; transition: all 0.2s ease; }
     .bottom-nav-item.active { color: #00FFA3 !important; }
-    .bottom-nav-item svg { transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
     .bottom-nav-item.active svg { transform: scale(1.15); filter: drop-shadow(0 0 6px rgba(0, 255, 163, 0.6)); }
     .bottom-nav-item.active span { font-weight: 800 !important; filter: drop-shadow(0 0 4px rgba(0, 255, 163, 0.3)); }
 </style>
@@ -256,7 +106,9 @@ SVG_ICONS = {
     "clip": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:100%; height:100%;"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="M10 8l6 4-6 4V8z"></path></svg>',
     "trend": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:100%; height:100%;"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>',
     "my": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:100%; height:100%;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>',
-    "my_fill": '<svg viewBox="0 0 24 24" fill="#00FFA3" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:100%;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>'
+    "my_fill": '<svg viewBox="0 0 24 24" fill="#00FFA3" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:100%;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>',
+    "star": '<svg viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px; height:14px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>',
+    "star_fill": '<svg viewBox="0 0 24 24" fill="#00FFA3" xmlns="http://www.w3.org/2000/svg" style="width:14px; height:14px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>'
 }
 
 # ----------------------------------------------------
@@ -392,7 +244,10 @@ if current_nav == "live":
         tags_html = "".join([f'<span class="tag-badge">#{html.escape(t)}</span>' for t in extracted_tags])
         
         is_bookmarked = ch_id in bookmarks
-        bm_svg = SVG_ICONS['my_fill'] if is_bookmarked else SVG_ICONS['my']
+        
+        # 🚨 북마크 상태에 따른 클래스와 아이콘 분기
+        btn_class = "bm-btn-active" if is_bookmarked else "bm-btn"
+        bm_svg = SVG_ICONS['star_fill'] if is_bookmarked else SVG_ICONS['star']
         
         card_class = "stream-card-random" if (current_sort == "🎲 랜덤 픽" and idx == 1) else "stream-card"
         
@@ -414,11 +269,12 @@ if current_nav == "live":
                 </div>
             </a>
             <div style="padding: 0 14px 12px 14px;">
-                <div style="display:flex; align-items:center; gap:4px;">
-                    <a href="{toggle_url}" target="_self" style="text-decoration:none; color:#9CA3AF; display:flex; align-items:center; justify-content:center; width:14px; height:14px; flex-shrink:0; transform: translateY(-2px);">{bm_svg}</a>
-                    <a href="https://chzzk.naver.com/live/{ch_id}" target="_blank" style="text-decoration:none; font-weight:700; color:#00FFA3; font-size:0.85rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; line-height:1; display:flex; align-items:center;">{html.escape(ch_name)}</a>
+                <!-- 🚨 스트리머명은 왼쪽 끝, 즐겨찾기 버튼은 오른쪽 끝으로 완전히 분리 (space-between) -->
+                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:4px;">
+                    <a href="https://chzzk.naver.com/live/{ch_id}" target="_blank" style="text-decoration:none; font-weight:700; color:#00FFA3; font-size:0.85rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; line-height:1; display:block;">{html.escape(ch_name)}</a>
+                    <a href="{toggle_url}" target="_self" class="{btn_class}" style="text-decoration:none;">{bm_svg}</a>
                 </div>
-                <div style="margin-top:6px;">{tags_html}</div>
+                <div style="margin-top:2px;">{tags_html}</div>
             </div>
         </div>'''
         st.markdown(card_html, unsafe_allow_html=True)
@@ -443,7 +299,7 @@ elif current_nav == "clip":
             if b_id in temp_bms: del temp_bms[b_id]
             toggle_url = build_url("clip", current_sort, temp_bms)
             
-            card_html = f'''<div class="content-card"><div style="display:flex; align-items:center; gap:4px; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.05);"><a href="{toggle_url}" target="_self" style="text-decoration:none; color:#00FFA3; width:14px; height:14px; flex-shrink:0; display:flex; align-items:center; justify-content:center; transform: translateY(-2px);">{SVG_ICONS['my_fill']}</a><div style="display:flex; align-items:center; gap:4px;"><span style="font-weight: 700; color: #00FFA3; font-size: 0.95rem; line-height:1; display:flex; align-items:center;">{html.escape(b_name)}</span><span style="font-weight: 600; color: #E5E7EB; font-size: 0.8rem; line-height:1; display:flex; align-items:center;">님의 최신 영상</span></div></div>'''
+            card_html = f'''<div class="content-card"><div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.05);"><div style="display:flex; align-items:center; gap:6px;"><span style="font-weight: 700; color: #00FFA3; font-size: 0.95rem; line-height:1;">{html.escape(b_name)}</span><span style="font-weight: 600; color: #E5E7EB; font-size: 0.8rem; line-height:1;">님의 최신 영상</span></div><a href="{toggle_url}" target="_self" class="bm-btn-active" style="text-decoration:none;">{SVG_ICONS['star_fill']}</a></div>'''
             
             if videos:
                 for i, v in enumerate(videos):
@@ -503,7 +359,7 @@ elif current_nav == "my":
             if b_id in temp_bms: del temp_bms[b_id]
             toggle_url = build_url("my", current_sort, temp_bms)
             
-            st.markdown(f'''<div class="content-card" style="display:flex; justify-content:space-between; align-items:center; padding: 14px;"><div style="display:flex; align-items:flex-start; gap:4px;"><a href="{toggle_url}" target="_self" style="text-decoration:none; color:#00FFA3; width:14px; height:14px; flex-shrink:0; display:flex; align-items:center; justify-content:center; transform: translateY(-2px);">{SVG_ICONS['my_fill']}</a><div><div style="font-weight:700; color:#00FFA3; font-size:0.95rem; line-height:1; margin-bottom:6px; display:flex; align-items:center;">{html.escape(b_name)}</div><div style="font-size:0.75rem; color:#9CA3AF; font-weight:500; line-height:1;">채널 ID: {b_id}</div></div></div><a href="https://chzzk.naver.com/live/{b_id}" target="_blank" style="text-decoration:none; background:rgba(0,255,163,0.1); color:#00FFA3; border:1px solid rgba(0,255,163,0.4); padding:6px 14px; border-radius:6px; font-size:0.8rem; font-weight:700; transition:all 0.2s; line-height:1;">방송 보기</a></div>''', unsafe_allow_html=True)
+            st.markdown(f'''<div class="content-card" style="display:flex; justify-content:space-between; align-items:center; padding: 14px;"><div style="display:flex; align-items:flex-start; gap:10px;"><a href="{toggle_url}" target="_self" class="bm-btn-active" style="text-decoration:none; margin-top: 2px;">{SVG_ICONS['star_fill']}</a><div><div style="font-weight:700; color:#00FFA3; font-size:0.95rem; line-height:1; margin-bottom:6px; display:flex; align-items:center;">{html.escape(b_name)}</div><div style="font-size:0.75rem; color:#9CA3AF; font-weight:500; line-height:1;">채널 ID: {b_id}</div></div></div><a href="https://chzzk.naver.com/live/{b_id}" target="_blank" style="text-decoration:none; background:rgba(0,255,163,0.1); color:#00FFA3; border:1px solid rgba(0,255,163,0.4); padding:6px 14px; border-radius:6px; font-size:0.8rem; font-weight:700; transition:all 0.2s; line-height:1;">방송 보기</a></div>''', unsafe_allow_html=True)
 
 # ----------------------------------------------------
 # 6. 하단 고정 네비게이션 바
