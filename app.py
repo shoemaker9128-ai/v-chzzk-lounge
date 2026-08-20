@@ -47,14 +47,16 @@ st.markdown("""
         border-bottom: 1px solid rgba(255, 255, 255, 0.05); 
     }
     .app-logo {
-        font-size: clamp(1.3rem, 7vw, 1.75rem); 
+        font-size: clamp(1.6rem, 9vw, 2.2rem); /* 로고 크기를 더 크고 시원하게 확대 */
         font-weight: 900;
-        letter-spacing: -1px; 
+        letter-spacing: 0.5px; /* 자간을 살짝 벌려줌 */
         color: #FFFFFF;
         line-height: 1;
         font-style: italic; 
         padding-right: 4px;
         white-space: nowrap; 
+        transform: scaleX(1.08); /* 로고를 좌우로 살짝 더 넓게(Wide) 만듦 */
+        transform-origin: left center;
     }
     .app-logo span {
         color: #00FFA3;
@@ -281,18 +283,17 @@ def fetch_clips_from_db(channel_id):
     except:
         return []
 
-# 🚨 새롭게 풍성해진 태그 추출기 (단어장 규칙)
 def extract_dummy_tags(title):
     tags = []
-    title_lower = title.lower() # 영어 검색(lol 등)을 위해 소문자로 변환
+    title_lower = title.lower() 
     
-    # 1. 소속 그룹 키워드
+    # 소속 그룹
     if "스텔" in title: tags.append("스텔라이브")
     if "이세" in title or "이세돌" in title: tags.append("이세돌")
     if "플레" in title or "플레이브" in title: tags.append("플레이브")
     if "홀로" in title: tags.append("홀로라이브")
     
-    # 2. 게임 키워드 (언제든 쉼표를 찍고 더 추가하실 수 있습니다)
+    # 게임
     if "마크" in title or "마인크래프트" in title: tags.append("마인크래프트")
     if "발로" in title or "발로란트" in title: tags.append("발로란트")
     if "롤" in title or "lol" in title_lower: tags.append("리그오브레전드")
@@ -301,12 +302,12 @@ def extract_dummy_tags(title):
     if "철권" in title: tags.append("철권8")
     if "종겜" in title or "종합" in title: tags.append("종합게임")
     
-    # 3. 방송 컨텐츠 키워드
+    # 콘텐츠
     if "저챗" in title or "노가리" in title or "수다" in title: tags.append("저스트채팅")
     if "노래" in title or "가창" in title or "우타와쿠" in title: tags.append("노래방")
     if "월드컵" in title or "이상형" in title: tags.append("이상형월드컵")
     
-    # 기본 태그
+    # 기본
     tags.append("버튜버")
     return tags
 
@@ -387,6 +388,7 @@ if current_nav == "live":
         else: temp_bms[ch_id] = ch_name
         toggle_url = build_url("live", current_sort, temp_bms)
         
+        # 🚨 translateY(-2px) 적용: 별을 1px 더 위로 올려서 텍스트와 완벽하게 중앙을 맞췄습니다.
         card_html = f'''
         <div class="{card_class}">
             <div class="overlay-badges-container">
@@ -401,7 +403,7 @@ if current_nav == "live":
             </a>
             <div style="padding: 0 14px 12px 14px;">
                 <div style="display:flex; align-items:center; gap:4px;">
-                    <a href="{toggle_url}" target="_self" style="text-decoration:none; color:#9CA3AF; display:flex; align-items:center; justify-content:center; width:16px; height:16px; flex-shrink:0; transform: translateY(-1px);">{bm_svg}</a>
+                    <a href="{toggle_url}" target="_self" style="text-decoration:none; color:#9CA3AF; display:flex; align-items:center; justify-content:center; width:16px; height:16px; flex-shrink:0; transform: translateY(-2px);">{bm_svg}</a>
                     <a href="https://chzzk.naver.com/live/{ch_id}" target="_blank" style="text-decoration:none; font-weight:700; color:#00FFA3; font-size:0.85rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; line-height:1; display:flex; align-items:center;">{html.escape(ch_name)}</a>
                 </div>
                 <div style="margin-top:6px;">{tags_html}</div>
@@ -417,7 +419,7 @@ if current_nav == "live":
 # 핫클립(Clip) 탭
 # ----------------------------------------------------
 elif current_nav == "clip":
-    st.markdown(f'''<div style="display:flex; align-items:center; gap:4px; margin-bottom:14px;"><div style="color:#00FFA3; width:16px; height:16px; flex-shrink:0; display:flex; align-items:center; justify-content:center; transform: translateY(-1px);">{SVG_ICONS['clip']}</div><div style="font-weight:800; font-size:1.05rem; color:#FFF; line-height:1; margin-top:1px;">MY 핫클립</div></div>''', unsafe_allow_html=True)
+    st.markdown(f'''<div style="display:flex; align-items:center; gap:4px; margin-bottom:14px;"><div style="color:#00FFA3; width:16px; height:16px; flex-shrink:0; display:flex; align-items:center; justify-content:center; transform: translateY(-2px);">{SVG_ICONS['clip']}</div><div style="font-weight:800; font-size:1.05rem; color:#FFF; line-height:1; margin-top:1px;">MY 핫클립</div></div>''', unsafe_allow_html=True)
     
     if not bookmarks:
         st.markdown("<div style='text-align:center; padding:30px; color:#9CA3AF; background:#1C1E26; border-radius:12px; border:1px solid rgba(255,255,255,0.1); font-size:0.85rem;'>즐겨찾기한 스트리머가 없습니다.<br>라이브 탭에서 즐겨찾기를 추가해 보세요!</div>", unsafe_allow_html=True)
@@ -429,7 +431,7 @@ elif current_nav == "clip":
             if b_id in temp_bms: del temp_bms[b_id]
             toggle_url = build_url("clip", current_sort, temp_bms)
             
-            card_html = f'''<div class="content-card"><div style="display:flex; align-items:center; gap:4px; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.05);"><a href="{toggle_url}" target="_self" style="text-decoration:none; color:#00FFA3; width:16px; height:16px; flex-shrink:0; display:flex; align-items:center; justify-content:center; transform: translateY(-1px);">{SVG_ICONS['my_fill']}</a><div style="display:flex; align-items:center; gap:4px;"><span style="font-weight: 700; color: #00FFA3; font-size: 0.95rem; line-height:1; display:flex; align-items:center;">{html.escape(b_name)}</span><span style="font-weight: 600; color: #E5E7EB; font-size: 0.8rem; line-height:1; display:flex; align-items:center;">님의 최신 영상</span></div></div>'''
+            card_html = f'''<div class="content-card"><div style="display:flex; align-items:center; gap:4px; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.05);"><a href="{toggle_url}" target="_self" style="text-decoration:none; color:#00FFA3; width:16px; height:16px; flex-shrink:0; display:flex; align-items:center; justify-content:center; transform: translateY(-2px);">{SVG_ICONS['my_fill']}</a><div style="display:flex; align-items:center; gap:4px;"><span style="font-weight: 700; color: #00FFA3; font-size: 0.95rem; line-height:1; display:flex; align-items:center;">{html.escape(b_name)}</span><span style="font-weight: 600; color: #E5E7EB; font-size: 0.8rem; line-height:1; display:flex; align-items:center;">님의 최신 영상</span></div></div>'''
             
             if videos:
                 for i, v in enumerate(videos):
@@ -451,7 +453,7 @@ elif current_nav == "clip":
 # 트렌드(Trend) 탭
 # ----------------------------------------------------
 elif current_nav == "trend":
-    st.markdown(f'''<div style="display:flex; align-items:center; gap:4px; margin-bottom:14px;"><div style="color:#00FFA3; width:16px; height:16px; flex-shrink:0; display:flex; align-items:center; justify-content:center; transform: translateY(-1px);">{SVG_ICONS['trend']}</div><div style="font-weight:800; font-size:1.05rem; color:#FFF; line-height:1; margin-top:1px;">실시간 인기 태그</div></div>''', unsafe_allow_html=True)
+    st.markdown(f'''<div style="display:flex; align-items:center; gap:4px; margin-bottom:14px;"><div style="color:#00FFA3; width:16px; height:16px; flex-shrink:0; display:flex; align-items:center; justify-content:center; transform: translateY(-2px);">{SVG_ICONS['trend']}</div><div style="font-weight:800; font-size:1.05rem; color:#FFF; line-height:1; margin-top:1px;">실시간 인기 태그</div></div>''', unsafe_allow_html=True)
     
     lives = fetch_lives_from_db()
     tag_stats = {}
@@ -479,7 +481,7 @@ elif current_nav == "trend":
 # 마이(My) 탭
 # ----------------------------------------------------
 elif current_nav == "my":
-    st.markdown(f'''<div style="display:flex; align-items:center; gap:4px; margin-bottom:14px;"><div style="color:#00FFA3; width:16px; height:16px; flex-shrink:0; display:flex; align-items:center; justify-content:center; transform: translateY(-1px);">{SVG_ICONS['my']}</div><div style="font-weight:800; font-size:1.05rem; color:#FFF; line-height:1; margin-top:1px;">MY 채널</div></div>''', unsafe_allow_html=True)
+    st.markdown(f'''<div style="display:flex; align-items:center; gap:4px; margin-bottom:14px;"><div style="color:#00FFA3; width:16px; height:16px; flex-shrink:0; display:flex; align-items:center; justify-content:center; transform: translateY(-2px);">{SVG_ICONS['my']}</div><div style="font-weight:800; font-size:1.05rem; color:#FFF; line-height:1; margin-top:1px;">MY 채널</div></div>''', unsafe_allow_html=True)
     if not bookmarks:
         st.markdown("<div style='text-align:center; padding:30px; color:#9CA3AF; background:#1C1E26; border-radius:12px; border:1px solid rgba(255,255,255,0.1); font-size:0.85rem;'>즐겨찾기한 스트리머가 없습니다.<br>라이브 탭에서 즐겨찾기를 추가해 보세요!</div>", unsafe_allow_html=True)
     else:
@@ -489,7 +491,7 @@ elif current_nav == "my":
             if b_id in temp_bms: del temp_bms[b_id]
             toggle_url = build_url("my", current_sort, temp_bms)
             
-            st.markdown(f'''<div class="content-card" style="display:flex; justify-content:space-between; align-items:center; padding: 14px;"><div style="display:flex; align-items:flex-start; gap:4px;"><a href="{toggle_url}" target="_self" style="text-decoration:none; color:#00FFA3; width:16px; height:16px; flex-shrink:0; display:flex; align-items:center; justify-content:center; transform: translateY(-1px);">{SVG_ICONS['my_fill']}</a><div><div style="font-weight:700; color:#00FFA3; font-size:0.95rem; line-height:1; margin-bottom:6px; display:flex; align-items:center;">{html.escape(b_name)}</div><div style="font-size:0.75rem; color:#9CA3AF; font-weight:500; line-height:1;">채널 ID: {b_id}</div></div></div><a href="https://chzzk.naver.com/live/{b_id}" target="_blank" style="text-decoration:none; background:rgba(0,255,163,0.1); color:#00FFA3; border:1px solid rgba(0,255,163,0.4); padding:6px 14px; border-radius:6px; font-size:0.8rem; font-weight:700; transition:all 0.2s; line-height:1;">방송 보기</a></div>''', unsafe_allow_html=True)
+            st.markdown(f'''<div class="content-card" style="display:flex; justify-content:space-between; align-items:center; padding: 14px;"><div style="display:flex; align-items:flex-start; gap:4px;"><a href="{toggle_url}" target="_self" style="text-decoration:none; color:#00FFA3; width:16px; height:16px; flex-shrink:0; display:flex; align-items:center; justify-content:center; transform: translateY(-2px);">{SVG_ICONS['my_fill']}</a><div><div style="font-weight:700; color:#00FFA3; font-size:0.95rem; line-height:1; margin-bottom:6px; display:flex; align-items:center;">{html.escape(b_name)}</div><div style="font-size:0.75rem; color:#9CA3AF; font-weight:500; line-height:1;">채널 ID: {b_id}</div></div></div><a href="https://chzzk.naver.com/live/{b_id}" target="_blank" style="text-decoration:none; background:rgba(0,255,163,0.1); color:#00FFA3; border:1px solid rgba(0,255,163,0.4); padding:6px 14px; border-radius:6px; font-size:0.8rem; font-weight:700; transition:all 0.2s; line-height:1;">방송 보기</a></div>''', unsafe_allow_html=True)
 
 # ----------------------------------------------------
 # 6. 하단 고정 네비게이션 바
