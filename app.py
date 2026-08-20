@@ -19,62 +19,78 @@ st.set_page_config(
 # ----------------------------------------------------
 st.markdown("""
 <style>
-    /* 전체 배경을 딥블랙으로 고정 */
-    [data-testid="stAppViewContainer"], [data-testid="stMain"], .stApp {
+    /* 🚨 1. 웹 브라우저 바닥부터 스트림릿의 모든 뼈대를 딥블랙으로 완벽하게 도배 (단차 원천 차단) */
+    html, body, #root, .stApp, 
+    [data-testid="stAppViewContainer"], 
+    [data-testid="stMain"], 
+    [data-testid="stMainBlockContainer"] {
+        background: #090A0F !important;
         background-color: #090A0F !important;
+        background-image: none !important;
     }
     
-    /* 헤더 및 불필요한 요소 숨김 */
+    /* 기본 UI 숨김 */
     header[data-testid="stHeader"] { display: none !important; }
     #MainMenu { visibility: hidden !important; }
     footer { display: none !important; }
 
     @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
     
+    /* 폰트 및 기본 글자색 지정 */
     html, body, [class*="css"], .stApp {
         font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif !important;
         color: #F3F4F6 !important;
     }
 
-    /* 모바일 프레임(420px) 중앙 고정 */
-    .block-container {
-        padding-top: 1.5rem !important;
-        padding-bottom: 5.5rem !important; 
+    /* 🚨 2. 모바일 프레임(420px) 중앙 고정 및 다크그레이 배경 적용 */
+    div.block-container {
+        background: #0F1015 !important;
+        background-color: #0F1015 !important;
         max-width: 420px !important; 
         margin: 0 auto !important;
-        background-color: #0F1015 !important;
+        padding-top: 1.5rem !important;
+        padding-bottom: 5.5rem !important; 
         min-height: 100vh !important;
         border-left: 1px solid rgba(255, 255, 255, 0.05) !important;
         border-right: 1px solid rgba(255, 255, 255, 0.05) !important;
-        box-shadow: 0 0 30px rgba(0, 0, 0, 0.8) !important;
+        box-shadow: 0 0 40px rgba(0, 0, 0, 0.9) !important;
     }
 
+    /* 헤더 로고 영역 */
     .app-header-container { display: flex; justify-content: space-between; align-items: center; padding: 4px 4px 16px 4px; margin-bottom: 16px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); gap: 12px; }
     .app-logo { font-size: clamp(1.6rem, 9vw, 2.2rem); font-weight: 900; letter-spacing: 0.5px; color: #FFFFFF; line-height: 1; font-style: italic; white-space: nowrap; transform: scaleX(1.08); transform-origin: left center; flex-shrink: 0; }
     .app-logo span { color: #00FFA3; text-shadow: 0 0 12px rgba(0, 255, 163, 0.4); }
     .app-subtitle-badge { display: flex; align-items: center; background-color: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); padding: 6px 10px; border-radius: 20px; font-size: clamp(0.7rem, 3.5vw, 0.8rem); color: #9CA3AF; font-weight: 600; letter-spacing: -0.3px; line-height: 1; white-space: nowrap; flex-shrink: 1; }
     .app-subtitle-badge span { color: #00FFA3; font-size: 0.4rem; margin-right: 6px; }
+    
+    /* 탭 메뉴 박스 */
     .custom-segment-box { display: flex !important; flex-direction: row !important; justify-content: space-between !important; align-items: center !important; width: 100%; margin-bottom: 14px; background-color: #1C1E26; border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 10px; padding: 3px; gap: 3px; }
     .segment-tab { flex: 1; text-align: center; padding: 7px 0 !important; font-size: 0.75rem !important; font-weight: 700; text-decoration: none !important; color: #9CA3AF !important; border-radius: 7px; display: block; line-height: 1.2; transition: all 0.2s ease; }
     .segment-tab.active { background-color: #00FFA3 !important; color: #111111 !important; }
+    
+    /* 스트림 카드 레이아웃 */
     .stream-card { position: relative !important; border: 1px solid rgba(255, 255, 255, 0.15) !important; background: #1C1E26 !important; border-radius: 14px; margin-bottom: 16px !important; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4); overflow: hidden; }
     .stream-card-random { position: relative !important; border: 2px solid #00FFA3 !important; background: #1C1E26 !important; border-radius: 14px; margin-bottom: 16px !important; box-shadow: 0 4px 12px rgba(0, 255, 163, 0.15); overflow: hidden; }
     .content-card { background-color: #1C1E26; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 12px 14px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); }
+    
+    /* 배지 영역 (LIVE, 시청자수) */
     .overlay-badges-container { position: absolute; top: 10px; left: 10px; display: flex; align-items: center; gap: 0px; z-index: 10; pointer-events: none; }
     .badge-live { background-color: #FF3333; color: #FFFFFF; padding: 4px 6px; border-top-left-radius: 5px; border-bottom-left-radius: 5px; font-size: 0.65rem; font-weight: 800; letter-spacing: 0.3px; box-shadow: 0 2px 4px rgba(0,0,0,0.4); display: flex; align-items: center; line-height: 1; }
     .badge-viewers { background-color: rgba(15, 16, 21, 0.95); border-top: 1px solid rgba(255, 255, 255, 0.2); border-bottom: 1px solid rgba(255, 255, 255, 0.2); border-right: 1px solid rgba(255, 255, 255, 0.2); color: #FFFFFF; padding: 4px 6px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; font-size: 0.65rem; font-weight: 700; box-shadow: 0 2px 4px rgba(0,0,0,0.4); display: flex; align-items: center; line-height: 1; }
     .tag-badge { display: inline-block; background: rgba(0, 255, 163, 0.08); color: #00FFA3; border: 1px solid rgba(0, 255, 163, 0.35); padding: 2px 5px; border-radius: 5px; font-size: 0.65rem; margin: 3px 3px 0 0; }
     
+    /* 알약(Pill) 모양 즐겨찾기 버튼 */
     .bm-btn { display: flex; align-items: center; justify-content: center; width: 32px; height: 24px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.15); background-color: transparent; transition: all 0.2s ease; }
     .bm-btn-active { display: flex; align-items: center; justify-content: center; width: 32px; height: 24px; border-radius: 12px; border: 1px solid rgba(0, 255, 163, 0.5); background-color: rgba(0, 255, 163, 0.1); transition: all 0.2s ease; }
 
+    /* 하단 네비게이션 바 중앙 고정 */
     .bottom-nav-container { position: fixed !important; bottom: 0 !important; left: 50% !important; transform: translateX(-50%) !important; width: 100% !important; max-width: 420px !important; background: rgba(24, 26, 32, 0.95) !important; backdrop-filter: blur(16px) !important; -webkit-backdrop-filter: blur(16px) !important; border-top: 1px solid rgba(255, 255, 255, 0.1) !important; border-left: 1px solid rgba(255, 255, 255, 0.05) !important; border-right: 1px solid rgba(255, 255, 255, 0.05) !important; box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.6) !important; display: flex !important; justify-content: space-around !important; padding: 10px 0 10px 0 !important; z-index: 900 !important; }
     .bottom-nav-item { color: #525C6D !important; text-decoration: none !important; display: flex; flex-direction: column; align-items: center; gap: 4px; transition: all 0.2s ease; }
     .bottom-nav-item.active { color: #00FFA3 !important; }
     .bottom-nav-item.active svg { transform: scale(1.15); filter: drop-shadow(0 0 6px rgba(0, 255, 163, 0.6)); }
     .bottom-nav-item.active span { font-weight: 800 !important; filter: drop-shadow(0 0 4px rgba(0, 255, 163, 0.3)); }
 
-    /* 🚨 스트림릿 에러를 원천 차단하는 가장 안전하고 깔끔한 썸네일 전용 CSS */
+    /* 에러 방지용 썸네일 CSS 덮어쓰기 마법 */
     .stream-img {
         width: 100%;
         height: 100%;
@@ -83,10 +99,9 @@ st.markdown("""
         display: block;
         border-bottom: 1px solid rgba(255,255,255,0.05);
         background-color: #1C1E26;
-        color: transparent; /* 이미지가 깨질 때 나오는 지저분한 텍스트 숨김 */
+        color: transparent; 
         position: relative;
     }
-    /* 🚨 이미지가 로딩 실패(엑스박스)했을 때만 자동으로 덮어씌워지는 대체 UI */
     .stream-img::before {
         content: "화면 준비 중";
         position: absolute;
@@ -242,7 +257,6 @@ if current_nav == "live":
         viewer_count = live.get("viewer_count", 0)
         formatted_viewers = f"{viewer_count:,}명"
         
-        # 🚨 파이썬 방어: 치지직 API의 가짜 글자를 480 픽셀 주소로 강제 복구
         thumb = live.get("thumbnail_url", "")
         if thumb:
             thumb = thumb.replace("{resolution}", "480").replace("{}", "480")
@@ -262,7 +276,6 @@ if current_nav == "live":
         else: temp_bms[ch_id] = ch_name
         toggle_url = build_url("live", current_sort, temp_bms)
         
-        # 🚨 HTML 안에는 오직 깔끔한 class명(stream-img)만 남겨서 에러를 원천 봉쇄했습니다.
         card_html = f'''
         <div class="{card_class}">
             <div class="overlay-badges-container">
@@ -320,7 +333,6 @@ elif current_nav == "clip":
                     
                     margin_style = "margin-bottom: 12px;" if i == 0 and len(videos) > 1 else ""
                     
-                    # 🚨 핫클립 탭에도 동일한 방어막 적용 완료
                     card_html += f'''<a href="https://chzzk.naver.com/video/{v_id}" target="_blank" style="text-decoration:none; color:inherit; display:block; {margin_style}">
                         <div style="display:flex; gap:12px; align-items:center;">
                             <div style="width:105px; height:58px; border-radius:6px; flex-shrink:0; position:relative; overflow:hidden;">
