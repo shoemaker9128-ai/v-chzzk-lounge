@@ -19,12 +19,10 @@ st.set_page_config(
 # ----------------------------------------------------
 st.markdown("""
 <style>
-    /* 전체 배경을 딥블랙으로 고정 */
     [data-testid="stAppViewContainer"], [data-testid="stMain"], .stApp {
         background-color: #090A0F !important;
     }
     
-    /* 헤더 및 불필요한 요소 숨김 */
     header[data-testid="stHeader"] { display: none !important; }
     #MainMenu { visibility: hidden !important; }
     footer { display: none !important; }
@@ -36,7 +34,6 @@ st.markdown("""
         color: #F3F4F6 !important;
     }
 
-    /* 모바일 프레임(420px) 중앙 고정 */
     .block-container {
         padding-top: 1.5rem !important;
         padding-bottom: 5.5rem !important; 
@@ -65,36 +62,31 @@ st.markdown("""
     .badge-viewers { background-color: rgba(15, 16, 21, 0.95); border-top: 1px solid rgba(255, 255, 255, 0.2); border-bottom: 1px solid rgba(255, 255, 255, 0.2); border-right: 1px solid rgba(255, 255, 255, 0.2); color: #FFFFFF; padding: 4px 6px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; font-size: 0.65rem; font-weight: 700; box-shadow: 0 2px 4px rgba(0,0,0,0.4); display: flex; align-items: center; line-height: 1; }
     .tag-badge { display: inline-block; background: rgba(0, 255, 163, 0.08); color: #00FFA3; border: 1px solid rgba(0, 255, 163, 0.35); padding: 2px 5px; border-radius: 5px; font-size: 0.65rem; margin: 3px 3px 0 0; }
     
-    /* 알약(Pill) 모양의 즐겨찾기 버튼 스타일 */
-    .bm-btn {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 32px;
-        height: 24px;
-        border-radius: 12px;
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        background-color: transparent;
-        transition: all 0.2s ease;
-    }
-    .bm-btn-active {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 32px;
-        height: 24px;
-        border-radius: 12px;
-        border: 1px solid rgba(0, 255, 163, 0.5);
-        background-color: rgba(0, 255, 163, 0.1);
-        transition: all 0.2s ease;
-    }
+    .bm-btn { display: flex; align-items: center; justify-content: center; width: 32px; height: 24px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.15); background-color: transparent; transition: all 0.2s ease; }
+    .bm-btn-active { display: flex; align-items: center; justify-content: center; width: 32px; height: 24px; border-radius: 12px; border: 1px solid rgba(0, 255, 163, 0.5); background-color: rgba(0, 255, 163, 0.1); transition: all 0.2s ease; }
 
-    /* 하단 네비게이션 바 중앙 고정 */
     .bottom-nav-container { position: fixed !important; bottom: 0 !important; left: 50% !important; transform: translateX(-50%) !important; width: 100% !important; max-width: 420px !important; background: rgba(24, 26, 32, 0.95) !important; backdrop-filter: blur(16px) !important; -webkit-backdrop-filter: blur(16px) !important; border-top: 1px solid rgba(255, 255, 255, 0.1) !important; border-left: 1px solid rgba(255, 255, 255, 0.05) !important; border-right: 1px solid rgba(255, 255, 255, 0.05) !important; box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.6) !important; display: flex !important; justify-content: space-around !important; padding: 10px 0 10px 0 !important; z-index: 900 !important; }
     .bottom-nav-item { color: #525C6D !important; text-decoration: none !important; display: flex; flex-direction: column; align-items: center; gap: 4px; transition: all 0.2s ease; }
     .bottom-nav-item.active { color: #00FFA3 !important; }
     .bottom-nav-item.active svg { transform: scale(1.15); filter: drop-shadow(0 0 6px rgba(0, 255, 163, 0.6)); }
     .bottom-nav-item.active span { font-weight: 800 !important; filter: drop-shadow(0 0 4px rgba(0, 255, 163, 0.3)); }
+
+    /* 🚨 스트림릿 보안필터를 뚫는 완벽한 엑스박스(깨진 이미지) 가리기 CSS 마법 */
+    .stream-thumb {
+        width: 100%; height: 100%; object-fit: cover; display: block;
+        color: transparent; /* 글씨와 깨진 아이콘을 투명하게 숨김 */
+    }
+    /* 이미지가 깨졌을 때만 작동하는 가짜 썸네일 덮어씌우기 기술 */
+    .stream-thumb::before {
+        content: "";
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background-color: #2A2D35;
+        background-image: url('https://via.placeholder.com/480x270/2A2D35/9CA3AF?text=No+Thumbnail');
+        background-size: cover;
+        background-position: center;
+        z-index: 1;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -236,7 +228,11 @@ if current_nav == "live":
         viewer_count = live.get("viewer_count", 0)
         formatted_viewers = f"{viewer_count:,}명"
         
+        # 🚨 파이썬 방어: 치지직 API의 가짜 글자를 480 픽셀 주소로 강제 복구
         thumb = live.get("thumbnail_url", "")
+        if thumb:
+            thumb = thumb.replace("{resolution}", "480").replace("{}", "480")
+        
         if not thumb or thumb.strip() == "":
             thumb = "https://via.placeholder.com/480x270/2A2D35/9CA3AF?text=No+Thumbnail"
             
@@ -255,7 +251,7 @@ if current_nav == "live":
         else: temp_bms[ch_id] = ch_name
         toggle_url = build_url("live", current_sort, temp_bms)
         
-        # 🚨 [핵심 업데이트] <img> 태그에 referrerpolicy와 onerror 완벽 추가
+        # 🚨 CSS 마법 적용: 썸네일 박스에 배경을 깔고 이미지에 class="stream-thumb" 부여
         card_html = f'''
         <div class="{card_class}">
             <div class="overlay-badges-container">
@@ -263,7 +259,9 @@ if current_nav == "live":
                 <span class="badge-viewers">{formatted_viewers}</span>
             </div>
             <a href="https://chzzk.naver.com/live/{ch_id}" target="_blank" style="text-decoration:none; color:inherit; display:block;">
-                <img src="{thumb}" referrerpolicy="no-referrer" onerror="this.onerror=null; this.src='https://via.placeholder.com/480x270/2A2D35/9CA3AF?text=No+Thumbnail';" style="width:100%; aspect-ratio:16/9; object-fit:cover; display:block; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                <div style="position:relative; width:100%; aspect-ratio:16/9; background:#2A2D35 url('https://via.placeholder.com/480x270/2A2D35/9CA3AF?text=No+Thumbnail') center/cover; border-bottom: 1px solid rgba(255,255,255,0.05); overflow:hidden;">
+                    <img src="{thumb}" referrerpolicy="no-referrer" class="stream-thumb" alt="">
+                </div>
                 <div style="padding: 12px 14px 6px 14px;">
                     <div style="font-weight:700; font-size:1.05rem; color: #FFFFFF; line-height: 1.4;">{html.escape(title)}</div>
                 </div>
@@ -304,13 +302,18 @@ elif current_nav == "clip":
                 for i, v in enumerate(videos):
                     v_id = v.get("video_id")
                     v_title = v.get("video_title", "제목 없음")
-                    v_thumb = v.get("thumbnail_url", "https://via.placeholder.com/480x270/2A2D35/9CA3AF?text=No+Thumbnail")
+                    
+                    v_thumb = v.get("thumbnail_url", "")
+                    if v_thumb:
+                        v_thumb = v_thumb.replace("{resolution}", "480").replace("{}", "480")
+                    if not v_thumb or v_thumb.strip() == "":
+                        v_thumb = "https://via.placeholder.com/480x270/2A2D35/9CA3AF?text=No+Thumbnail"
+                        
                     v_views = v.get("view_count", 0)
                     
                     margin_style = "margin-bottom: 12px;" if i == 0 and len(videos) > 1 else ""
                     
-                    # 🚨 핫클립 탭 <img> 태그에도 동일하게 추가
-                    card_html += f'''<a href="https://chzzk.naver.com/video/{v_id}" target="_blank" style="text-decoration:none; color:inherit; display:block; {margin_style}"><div style="display:flex; gap:12px; align-items:center;"><div style="width:105px; height:58px; background:#2A2D35; border-radius:6px; display:flex; align-items:center; justify-content:center; flex-shrink:0; position:relative; overflow:hidden;"><img src="{v_thumb}" referrerpolicy="no-referrer" onerror="this.onerror=null; this.src='https://via.placeholder.com/480x270/2A2D35/9CA3AF?text=No+Thumbnail';" style="width:100%; height:100%; object-fit:cover;"><span style="position:absolute; background:rgba(0,0,0,0.8); color:#FFF; font-size:0.6rem; padding:2px 4px; border-radius:3px; bottom:4px; right:4px; font-weight:600; line-height:1;">재생</span></div><div style="flex:1; min-width:0;"><div style="font-weight:700; color:#FFFFFF; font-size:1.0rem; margin-bottom:6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; line-height:1.2;">{html.escape(v_title)}</div><div style="color:#9CA3AF; font-size:0.75rem; font-weight:500; line-height:1;">조회수 {v_views:,}회</div></div></div></a>'''
+                    card_html += f'''<a href="https://chzzk.naver.com/video/{v_id}" target="_blank" style="text-decoration:none; color:inherit; display:block; {margin_style}"><div style="display:flex; gap:12px; align-items:center;"><div style="width:105px; height:58px; background:#2A2D35 url('https://via.placeholder.com/480x270/2A2D35/9CA3AF?text=No+Thumbnail') center/cover; border-radius:6px; display:flex; align-items:center; justify-content:center; flex-shrink:0; position:relative; overflow:hidden;"><img src="{v_thumb}" referrerpolicy="no-referrer" class="stream-thumb" alt=""><span style="position:absolute; background:rgba(0,0,0,0.8); color:#FFF; font-size:0.6rem; padding:2px 4px; border-radius:3px; bottom:4px; right:4px; font-weight:600; line-height:1; z-index:2;">재생</span></div><div style="flex:1; min-width:0;"><div style="font-weight:700; color:#FFFFFF; font-size:1.0rem; margin-bottom:6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; line-height:1.2;">{html.escape(v_title)}</div><div style="color:#9CA3AF; font-size:0.75rem; font-weight:500; line-height:1;">조회수 {v_views:,}회</div></div></div></a>'''
             else:
                 card_html += f'''<div style="display:flex; gap:12px; align-items:center;"><div style="width:105px; height:58px; background:#2A2D35; border: 1px solid rgba(255,255,255,0.1); border-radius:6px; display:flex; align-items:center; justify-content:center; color:#9CA3AF; font-size:0.75rem; flex-shrink:0; position:relative; box-shadow: inset 0 0 10px rgba(0,0,0,0.5);"><span style="position:absolute; background:rgba(0,0,0,0.8); color:#FFF; font-size:0.6rem; padding:2px 4px; border-radius:3px; bottom:4px; right:4px; font-weight:600; line-height:1;">0:45</span>▶ 재생</div><div style="flex:1; min-width:0;"><div style="font-weight:700; color:#FFFFFF; font-size:1.0rem; margin-bottom:6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; line-height:1.2;">{html.escape(b_name)} 채널의 최신 영상이 없습니다.</div></div></div>'''
             
