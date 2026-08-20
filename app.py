@@ -25,18 +25,17 @@ st.markdown("""
 
     @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
     
-    /* 🚨 PC 모니터 전체 배경을 완전한 딥블랙(#090A0F)으로 통일 */
-    html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
+    /* 🚨 스트림릿의 모든 바깥쪽 영역과 최상위 레이어를 딥블랙(#090A0F)으로 강제 통일 */
+    html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"], .stApp, section.main {
         background-color: #090A0F !important;
     }
     
-    [class*="css"], .stApp {
+    [class*="css"] {
         font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif !important;
-        background-color: transparent !important;
         color: #F3F4F6 !important;
     }
 
-    /* 🚨 둥둥 떠 보이던 이중 박스 현상을 없애고, 완벽한 모바일 프레임 몰입감 제공 */
+    /* 🚨 중앙 앱 영역을 420px로 고정하고 완벽한 일체형 배경 부여 */
     .block-container {
         padding-top: 1.5rem;
         padding-bottom: 5.5rem; 
@@ -46,7 +45,7 @@ st.markdown("""
         min-height: 100vh !important;
         border-left: 1px solid rgba(255, 255, 255, 0.08);
         border-right: 1px solid rgba(255, 255, 255, 0.08);
-        box-shadow: 0 0 40px rgba(0, 0, 0, 0.9);
+        box-shadow: 0 0 50px rgba(0, 0, 0, 0.95);
     }
 
     .app-header-container {
@@ -210,7 +209,7 @@ st.markdown("""
         margin: 3px 3px 0 0; 
     }
 
-    /* 🚨 하단 네비게이션 바 고정 */
+    /* 🚨 하단 네비게이션 바 정중앙 고정 */
     .bottom-nav-container {
         position: fixed !important;
         bottom: 0 !important;
