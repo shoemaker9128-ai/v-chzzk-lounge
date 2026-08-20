@@ -255,7 +255,7 @@ if current_nav == "live":
         else: temp_bms[ch_id] = ch_name
         toggle_url = build_url("live", current_sort, temp_bms)
         
-        # 🚨 폰트 사이즈 일괄 확대 (방제: 1.05rem, 스트리머명: 0.95rem)
+        # 🚨 [핵심 업데이트] <img> 태그에 referrerpolicy와 onerror 완벽 추가
         card_html = f'''
         <div class="{card_class}">
             <div class="overlay-badges-container">
@@ -263,7 +263,7 @@ if current_nav == "live":
                 <span class="badge-viewers">{formatted_viewers}</span>
             </div>
             <a href="https://chzzk.naver.com/live/{ch_id}" target="_blank" style="text-decoration:none; color:inherit; display:block;">
-                <img src="{thumb}" style="width:100%; aspect-ratio:16/9; object-fit:cover; display:block; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                <img src="{thumb}" referrerpolicy="no-referrer" onerror="this.onerror=null; this.src='https://via.placeholder.com/480x270/2A2D35/9CA3AF?text=No+Thumbnail';" style="width:100%; aspect-ratio:16/9; object-fit:cover; display:block; border-bottom: 1px solid rgba(255,255,255,0.05);">
                 <div style="padding: 12px 14px 6px 14px;">
                     <div style="font-weight:700; font-size:1.05rem; color: #FFFFFF; line-height: 1.4;">{html.escape(title)}</div>
                 </div>
@@ -298,7 +298,6 @@ elif current_nav == "clip":
             if b_id in temp_bms: del temp_bms[b_id]
             toggle_url = build_url("clip", current_sort, temp_bms)
             
-            # 🚨 핫클립 탭 폰트 확대
             card_html = f'''<div class="content-card"><div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.05);"><div style="display:flex; align-items:center; gap:6px;"><span style="font-weight: 700; color: #00FFA3; font-size: 1.05rem; line-height:1;">{html.escape(b_name)}</span><span style="font-weight: 600; color: #E5E7EB; font-size: 0.8rem; line-height:1;">님의 최신 영상</span></div><a href="{toggle_url}" target="_self" class="bm-btn-active" style="text-decoration:none;">{SVG_ICONS['star_fill']}</a></div>'''
             
             if videos:
@@ -310,7 +309,8 @@ elif current_nav == "clip":
                     
                     margin_style = "margin-bottom: 12px;" if i == 0 and len(videos) > 1 else ""
                     
-                    card_html += f'''<a href="https://chzzk.naver.com/video/{v_id}" target="_blank" style="text-decoration:none; color:inherit; display:block; {margin_style}"><div style="display:flex; gap:12px; align-items:center;"><div style="width:105px; height:58px; background:#2A2D35; border-radius:6px; display:flex; align-items:center; justify-content:center; flex-shrink:0; position:relative; overflow:hidden;"><img src="{v_thumb}" style="width:100%; height:100%; object-fit:cover;"><span style="position:absolute; background:rgba(0,0,0,0.8); color:#FFF; font-size:0.6rem; padding:2px 4px; border-radius:3px; bottom:4px; right:4px; font-weight:600; line-height:1;">재생</span></div><div style="flex:1; min-width:0;"><div style="font-weight:700; color:#FFFFFF; font-size:1.0rem; margin-bottom:6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; line-height:1.2;">{html.escape(v_title)}</div><div style="color:#9CA3AF; font-size:0.75rem; font-weight:500; line-height:1;">조회수 {v_views:,}회</div></div></div></a>'''
+                    # 🚨 핫클립 탭 <img> 태그에도 동일하게 추가
+                    card_html += f'''<a href="https://chzzk.naver.com/video/{v_id}" target="_blank" style="text-decoration:none; color:inherit; display:block; {margin_style}"><div style="display:flex; gap:12px; align-items:center;"><div style="width:105px; height:58px; background:#2A2D35; border-radius:6px; display:flex; align-items:center; justify-content:center; flex-shrink:0; position:relative; overflow:hidden;"><img src="{v_thumb}" referrerpolicy="no-referrer" onerror="this.onerror=null; this.src='https://via.placeholder.com/480x270/2A2D35/9CA3AF?text=No+Thumbnail';" style="width:100%; height:100%; object-fit:cover;"><span style="position:absolute; background:rgba(0,0,0,0.8); color:#FFF; font-size:0.6rem; padding:2px 4px; border-radius:3px; bottom:4px; right:4px; font-weight:600; line-height:1;">재생</span></div><div style="flex:1; min-width:0;"><div style="font-weight:700; color:#FFFFFF; font-size:1.0rem; margin-bottom:6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; line-height:1.2;">{html.escape(v_title)}</div><div style="color:#9CA3AF; font-size:0.75rem; font-weight:500; line-height:1;">조회수 {v_views:,}회</div></div></div></a>'''
             else:
                 card_html += f'''<div style="display:flex; gap:12px; align-items:center;"><div style="width:105px; height:58px; background:#2A2D35; border: 1px solid rgba(255,255,255,0.1); border-radius:6px; display:flex; align-items:center; justify-content:center; color:#9CA3AF; font-size:0.75rem; flex-shrink:0; position:relative; box-shadow: inset 0 0 10px rgba(0,0,0,0.5);"><span style="position:absolute; background:rgba(0,0,0,0.8); color:#FFF; font-size:0.6rem; padding:2px 4px; border-radius:3px; bottom:4px; right:4px; font-weight:600; line-height:1;">0:45</span>▶ 재생</div><div style="flex:1; min-width:0;"><div style="font-weight:700; color:#FFFFFF; font-size:1.0rem; margin-bottom:6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; line-height:1.2;">{html.escape(b_name)} 채널의 최신 영상이 없습니다.</div></div></div>'''
             
@@ -343,7 +343,6 @@ elif current_nav == "trend":
                 rank_style = "width: 26px; height: 26px; border-radius: 6px; background: rgba(0, 255, 163, 0.15); color: #00FFA3; font-weight: 700; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; flex-shrink:0;"
             else:
                 rank_style = "width: 26px; height: 26px; border-radius: 6px; background: rgba(255, 255, 255, 0.05); color: #6B7280; font-weight: 700; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; flex-shrink:0;"
-            # 🚨 트렌드 탭 태그 폰트 확대
             st.markdown(f'''<div class="content-card" style="display:flex; align-items:center; justify-content:space-between; padding: 12px 14px;"><div style="display:flex; align-items:center; gap: 12px;"><div style="{rank_style}">{idx}</div><div style="font-size: 1.05rem; font-weight: 700; color: #E5E7EB; line-height:1;">#{html.escape(tag)}</div></div><div style="font-size: 0.8rem; font-weight: 500; color: #8E929B; display:flex; align-items:center; gap:4px; line-height:1;"><span style="color:#00FFA3; font-size:0.5rem;">●</span> {count:,}명</div></div>''', unsafe_allow_html=True)
 
 # ----------------------------------------------------
@@ -360,7 +359,6 @@ elif current_nav == "my":
             if b_id in temp_bms: del temp_bms[b_id]
             toggle_url = build_url("my", current_sort, temp_bms)
             
-            # 🚨 마이 탭 스트리머명 폰트 확대
             st.markdown(f'''<div class="content-card" style="display:flex; justify-content:space-between; align-items:center; padding: 14px;"><div style="display:flex; align-items:flex-start; gap:10px;"><a href="{toggle_url}" target="_self" class="bm-btn-active" style="text-decoration:none; margin-top: 2px;">{SVG_ICONS['star_fill']}</a><div><div style="font-weight:700; color:#00FFA3; font-size:1.05rem; line-height:1; margin-bottom:6px; display:flex; align-items:center;">{html.escape(b_name)}</div><div style="font-size:0.75rem; color:#9CA3AF; font-weight:500; line-height:1;">채널 ID: {b_id}</div></div></div><a href="https://chzzk.naver.com/live/{b_id}" target="_blank" style="text-decoration:none; background:rgba(0,255,163,0.1); color:#00FFA3; border:1px solid rgba(0,255,163,0.4); padding:6px 14px; border-radius:6px; font-size:0.8rem; font-weight:700; transition:all 0.2s; line-height:1;">방송 보기</a></div>''', unsafe_allow_html=True)
 
 # ----------------------------------------------------
