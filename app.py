@@ -25,17 +25,28 @@ st.markdown("""
 
     @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
     
-    html, body, [class*="css"], .stApp {
+    /* 🚨 PC 모니터의 남는 바깥쪽 여백은 완전한 검은색으로 처리 */
+    html, body {
+        background-color: #000000 !important;
+    }
+    
+    [class*="css"], .stApp {
         font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif !important;
-        background-color: #0F1015 !important;
+        background-color: transparent !important;
         color: #F3F4F6 !important;
     }
 
+    /* 🚨 앱 화면(스마트폰 영역)을 420px로 완벽하게 가두고 중앙에 배치 */
     .block-container {
         padding-top: 1.5rem;
         padding-bottom: 5.5rem; 
-        max-width: 420px;
-        margin: 0 auto;
+        max-width: 420px !important; 
+        margin: 0 auto !important;
+        background-color: #0F1015 !important;
+        min-height: 100vh !important;
+        border-left: 1px solid rgba(255, 255, 255, 0.05);
+        border-right: 1px solid rgba(255, 255, 255, 0.05);
+        box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
     }
 
     .app-header-container {
@@ -45,7 +56,7 @@ st.markdown("""
         padding: 4px 4px 16px 4px;
         margin-bottom: 16px;
         border-bottom: 1px solid rgba(255, 255, 255, 0.05); 
-        gap: 12px; /* 🚨 PC 화면을 위해 로고와 서브타이틀 사이 여백을 넉넉히 확보 */
+        gap: 12px; 
     }
     .app-logo {
         font-size: clamp(1.6rem, 9vw, 2.2rem); 
@@ -57,7 +68,7 @@ st.markdown("""
         white-space: nowrap; 
         transform: scaleX(1.08); 
         transform-origin: left center;
-        flex-shrink: 0; /* 🚨 창이 좁아져도 로고가 찌그러지지 않게 보호 */
+        flex-shrink: 0; 
     }
     .app-logo span {
         color: #00FFA3;
@@ -68,20 +79,20 @@ st.markdown("""
         align-items: center;
         background-color: rgba(255, 255, 255, 0.03); 
         border: 1px solid rgba(255, 255, 255, 0.08); 
-        padding: 6px 10px; /* 🚨 뱃지 크기를 모바일/PC 균형에 맞게 살짝 키움 */
+        padding: 6px 10px; 
         border-radius: 20px;
-        font-size: clamp(0.7rem, 3.5vw, 0.8rem); /* 🚨 뱃지 글자 크기도 화면에 맞춰 반응형 적용 */
+        font-size: clamp(0.7rem, 3.5vw, 0.8rem); 
         color: #9CA3AF; 
         font-weight: 600;
         letter-spacing: -0.3px; 
         line-height: 1;
         white-space: nowrap;
-        flex-shrink: 1; /* 🚨 필요하면 줄어들 수 있도록 유연성 부여 */
+        flex-shrink: 1; 
     }
     .app-subtitle-badge span {
         color: #00FFA3;
         font-size: 0.4rem;
-        margin-right: 6px; /* 점과 텍스트 사이 간격 미세 조정 */
+        margin-right: 6px; 
     }
 
     .custom-segment-box {
@@ -199,15 +210,20 @@ st.markdown("""
         margin: 3px 3px 0 0; 
     }
 
+    /* 🚨 하단 네비게이션 바도 420px로 잠그고 모니터 정중앙에 고정 */
     .bottom-nav-container {
         position: fixed !important;
         bottom: 0 !important;
-        left: 0 !important;
+        left: 50% !important; 
+        transform: translateX(-50%) !important; 
         width: 100% !important;
+        max-width: 420px !important; 
         background: rgba(24, 26, 32, 0.95) !important; 
         backdrop-filter: blur(16px) !important;
         -webkit-backdrop-filter: blur(16px) !important;
         border-top: 1px solid rgba(255, 255, 255, 0.1) !important; 
+        border-left: 1px solid rgba(255, 255, 255, 0.05) !important;
+        border-right: 1px solid rgba(255, 255, 255, 0.05) !important;
         box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.6) !important; 
         display: flex !important;
         justify-content: space-around !important;
@@ -288,13 +304,11 @@ def extract_dummy_tags(title):
     tags = []
     title_lower = title.lower() 
     
-    # 소속 그룹
     if "스텔" in title: tags.append("스텔라이브")
     if "이세" in title or "이세돌" in title: tags.append("이세돌")
     if "플레" in title or "플레이브" in title: tags.append("플레이브")
     if "홀로" in title: tags.append("홀로라이브")
     
-    # 게임
     if "마크" in title or "마인크래프트" in title: tags.append("마인크래프트")
     if "발로" in title or "발로란트" in title: tags.append("발로란트")
     if "롤" in title or "lol" in title_lower: tags.append("리그오브레전드")
@@ -303,12 +317,10 @@ def extract_dummy_tags(title):
     if "철권" in title: tags.append("철권8")
     if "종겜" in title or "종합" in title: tags.append("종합게임")
     
-    # 콘텐츠
     if "저챗" in title or "노가리" in title or "수다" in title: tags.append("저스트채팅")
     if "노래" in title or "가창" in title or "우타와쿠" in title: tags.append("노래방")
     if "월드컵" in title or "이상형" in title: tags.append("이상형월드컵")
     
-    # 기본
     tags.append("버튜버")
     return tags
 
@@ -389,7 +401,6 @@ if current_nav == "live":
         else: temp_bms[ch_id] = ch_name
         toggle_url = build_url("live", current_sort, temp_bms)
         
-        # 🚨 width:14px; height:14px; 별 아이콘 크기를 더 작고 귀엽게 축소
         card_html = f'''
         <div class="{card_class}">
             <div class="overlay-badges-container">
@@ -432,7 +443,6 @@ elif current_nav == "clip":
             if b_id in temp_bms: del temp_bms[b_id]
             toggle_url = build_url("clip", current_sort, temp_bms)
             
-            # 🚨 핫클립 탭: 꽉 찬 별 크기도 14px로 축소
             card_html = f'''<div class="content-card"><div style="display:flex; align-items:center; gap:4px; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.05);"><a href="{toggle_url}" target="_self" style="text-decoration:none; color:#00FFA3; width:14px; height:14px; flex-shrink:0; display:flex; align-items:center; justify-content:center; transform: translateY(-2px);">{SVG_ICONS['my_fill']}</a><div style="display:flex; align-items:center; gap:4px;"><span style="font-weight: 700; color: #00FFA3; font-size: 0.95rem; line-height:1; display:flex; align-items:center;">{html.escape(b_name)}</span><span style="font-weight: 600; color: #E5E7EB; font-size: 0.8rem; line-height:1; display:flex; align-items:center;">님의 최신 영상</span></div></div>'''
             
             if videos:
@@ -493,7 +503,6 @@ elif current_nav == "my":
             if b_id in temp_bms: del temp_bms[b_id]
             toggle_url = build_url("my", current_sort, temp_bms)
             
-            # 🚨 마이 탭: 꽉 찬 별 크기도 14px로 축소
             st.markdown(f'''<div class="content-card" style="display:flex; justify-content:space-between; align-items:center; padding: 14px;"><div style="display:flex; align-items:flex-start; gap:4px;"><a href="{toggle_url}" target="_self" style="text-decoration:none; color:#00FFA3; width:14px; height:14px; flex-shrink:0; display:flex; align-items:center; justify-content:center; transform: translateY(-2px);">{SVG_ICONS['my_fill']}</a><div><div style="font-weight:700; color:#00FFA3; font-size:0.95rem; line-height:1; margin-bottom:6px; display:flex; align-items:center;">{html.escape(b_name)}</div><div style="font-size:0.75rem; color:#9CA3AF; font-weight:500; line-height:1;">채널 ID: {b_id}</div></div></div><a href="https://chzzk.naver.com/live/{b_id}" target="_blank" style="text-decoration:none; background:rgba(0,255,163,0.1); color:#00FFA3; border:1px solid rgba(0,255,163,0.4); padding:6px 14px; border-radius:6px; font-size:0.8rem; font-weight:700; transition:all 0.2s; line-height:1;">방송 보기</a></div>''', unsafe_allow_html=True)
 
 # ----------------------------------------------------
