@@ -68,16 +68,16 @@ st.markdown("""
     .segment-tab { flex: 1; text-align: center; padding: 7px 0 !important; font-size: 0.75rem !important; font-weight: 700; text-decoration: none !important; color: #9CA3AF !important; border-radius: 7px; display: block; line-height: 1.2; transition: all 0.2s ease; }
     .segment-tab.active { background-color: #00FFA3 !important; color: #111111 !important; }
     
-    /* 🚨 스트림 카드 레이아웃: 모서리 깨짐 방지 하드웨어 가속 마스킹 추가 */
+    /* 🚨 스트림 카드 레이아웃: 화면 하얗게 깨지던 위험한 mask CSS 완전 삭제 */
     .stream-card { 
         position: relative !important; border: none !important; background: #1C1E26 !important; 
         border-radius: 14px; margin-bottom: 16px !important; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4); 
-        overflow: hidden; transform: translateZ(0); -webkit-mask-image: -webkit-radial-gradient(white, black); 
+        overflow: hidden;
     }
     .stream-card-random { 
         position: relative !important; border: 2px solid #00FFA3 !important; background: #1C1E26 !important; 
         border-radius: 14px; margin-bottom: 16px !important; box-shadow: 0 4px 12px rgba(0, 255, 163, 0.15); 
-        overflow: hidden; transform: translateZ(0); -webkit-mask-image: -webkit-radial-gradient(white, black); 
+        overflow: hidden;
     }
     
     /* 핫클립 등 일반 콘텐츠 카드 테두리 삭제 */
@@ -99,33 +99,6 @@ st.markdown("""
     .bottom-nav-item.active { color: #00FFA3 !important; }
     .bottom-nav-item.active svg { transform: scale(1.15); filter: drop-shadow(0 0 6px rgba(0, 255, 163, 0.6)); }
     .bottom-nav-item.active span { font-weight: 800 !important; filter: drop-shadow(0 0 4px rgba(0, 255, 163, 0.3)); }
-
-    /* 에러 방지용 썸네일 CSS 덮어쓰기 마법 */
-    .stream-img {
-        width: 100%;
-        height: 100%;
-        aspect-ratio: 16/9;
-        object-fit: cover;
-        display: block;
-        border-bottom: 1px solid rgba(255,255,255,0.05);
-        background-color: #1C1E26;
-        color: transparent; 
-        position: relative;
-    }
-    .stream-img::before {
-        content: "화면 준비 중";
-        position: absolute;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
-        background-color: #1C1E26;
-        color: #525C6D;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 0.9rem;
-        font-weight: 700;
-        z-index: 10;
-    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -288,7 +261,7 @@ if current_nav == "live":
         else: temp_bms[ch_id] = ch_name
         toggle_url = build_url("live", current_sort, temp_bms)
         
-        # 🚨 썸네일 컨테이너(1층)에도 똑같은 border-radius 14px을 적용하여 완벽하게 밀착
+        # 🚨 구조를 가장 안전한 position: absolute 레이어 방식으로 교체 (브라우저 버그 원천차단)
         card_html = f'''
         <div class="{card_class}">
             <div class="overlay-badges-container">
@@ -296,14 +269,16 @@ if current_nav == "live":
                 <span class="badge-viewers">{formatted_viewers}</span>
             </div>
             <a href="https://chzzk.naver.com/live/{ch_id}" target="_blank" style="text-decoration:none; color:inherit; display:block;">
-                <div style="position:relative; width:100%; aspect-ratio:16/9; background:#1C1E26; border-bottom: 1px solid rgba(255,255,255,0.05); border-top-left-radius: 14px; border-top-right-radius: 14px; overflow:hidden; display:flex; align-items:center; justify-content:center;">
+                <div style="position:relative; width:100%; aspect-ratio:16/9; background:#1C1E26; overflow:hidden;">
                     
-                    <div style="position:absolute; z-index:1; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#525C6D;">
+                    <!-- 1층: 에러 대비용 '화면 준비 중' 플레이스홀더 -->
+                    <div style="position:absolute; top:0; left:0; width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#525C6D; z-index:1;">
                         {SVG_ICONS['monitor']}
                         <span style="font-size:0.85rem; font-weight:700;">화면 준비 중</span>
                     </div>
                     
-                    <img src="{thumb}" referrerpolicy="no-referrer" style="position:relative; z-index:2; width:100%; height:100%; object-fit:cover; color:transparent; background:transparent;" alt="">
+                    <!-- 2층: 썸네일 이미지 (정상적일 때는 1층을 완벽히 덮음) -->
+                    <img src="{thumb}" referrerpolicy="no-referrer" style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; color:transparent; z-index:2;" alt="">
                 </div>
                 <div style="padding: 12px 14px 6px 14px;">
                     <div style="font-weight:700; font-size:1.05rem; color: #FFFFFF; line-height: 1.4;">{html.escape(title)}</div>
@@ -356,11 +331,11 @@ elif current_nav == "clip":
                     
                     card_html += f'''<a href="https://chzzk.naver.com/video/{v_id}" target="_blank" style="text-decoration:none; color:inherit; display:block; {margin_style}">
                         <div style="display:flex; gap:12px; align-items:center;">
-                            <div style="width:105px; height:58px; border-radius:6px; flex-shrink:0; position:relative; overflow:hidden; transform: translateZ(0);">
-                                <div style="position:absolute; z-index:1; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#525C6D;">
+                            <div style="width:105px; height:58px; border-radius:6px; flex-shrink:0; position:relative; overflow:hidden; background:#1C1E26;">
+                                <div style="position:absolute; top:0; left:0; width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#525C6D; z-index:1;">
                                     {SVG_ICONS['play_empty']}
                                 </div>
-                                <img src="{v_thumb}" referrerpolicy="no-referrer" style="position:relative; z-index:2; width:100%; height:100%; object-fit:cover; color:transparent; background:transparent;" alt="">
+                                <img src="{v_thumb}" referrerpolicy="no-referrer" style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; color:transparent; z-index:2;" alt="">
                                 <span style="position:absolute; background:rgba(0,0,0,0.8); color:#FFF; font-size:0.6rem; padding:2px 4px; border-radius:3px; bottom:4px; right:4px; font-weight:600; line-height:1; z-index:3;">재생</span>
                             </div>
                             <div style="flex:1; min-width:0;">
