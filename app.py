@@ -19,7 +19,7 @@ st.set_page_config(
 # ----------------------------------------------------
 st.markdown("""
 <style>
-    /* 🚨 1. 웹 브라우저 바닥부터 스트림릿의 모든 뼈대를 딥블랙으로 완벽하게 도배 (단차 원천 차단) */
+    /* 1. 웹 브라우저 바닥부터 스트림릿의 모든 뼈대를 딥블랙으로 완벽하게 도배 (단차 원천 차단) */
     html, body, #root, .stApp, 
     [data-testid="stAppViewContainer"], 
     [data-testid="stMain"], 
@@ -42,7 +42,7 @@ st.markdown("""
         color: #F3F4F6 !important;
     }
 
-    /* 🚨 2. 모바일 프레임(420px) 중앙 고정 및 다크그레이 배경 적용 */
+    /* 2. 모바일 프레임(420px) 중앙 고정 및 다크그레이 배경 적용 */
     div.block-container {
         background: #0F1015 !important;
         background-color: #0F1015 !important;
@@ -68,10 +68,12 @@ st.markdown("""
     .segment-tab { flex: 1; text-align: center; padding: 7px 0 !important; font-size: 0.75rem !important; font-weight: 700; text-decoration: none !important; color: #9CA3AF !important; border-radius: 7px; display: block; line-height: 1.2; transition: all 0.2s ease; }
     .segment-tab.active { background-color: #00FFA3 !important; color: #111111 !important; }
     
-    /* 스트림 카드 레이아웃 */
-    .stream-card { position: relative !important; border: 1px solid rgba(255, 255, 255, 0.15) !important; background: #1C1E26 !important; border-radius: 14px; margin-bottom: 16px !important; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4); overflow: hidden; }
+    /* 🚨 스트림 카드 레이아웃: 거슬리는 회색 테두리(border) 삭제, 그림자만 유지 */
+    .stream-card { position: relative !important; border: none !important; background: #1C1E26 !important; border-radius: 14px; margin-bottom: 16px !important; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4); overflow: hidden; }
     .stream-card-random { position: relative !important; border: 2px solid #00FFA3 !important; background: #1C1E26 !important; border-radius: 14px; margin-bottom: 16px !important; box-shadow: 0 4px 12px rgba(0, 255, 163, 0.15); overflow: hidden; }
-    .content-card { background-color: #1C1E26; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 12px 14px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); }
+    
+    /* 🚨 핫클립 등 일반 콘텐츠 카드 테두리 삭제 */
+    .content-card { background-color: #1C1E26; border: none !important; border-radius: 12px; padding: 12px 14px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); }
     
     /* 배지 영역 (LIVE, 시청자수) */
     .overlay-badges-container { position: absolute; top: 10px; left: 10px; display: flex; align-items: center; gap: 0px; z-index: 10; pointer-events: none; }
@@ -299,7 +301,7 @@ if current_nav == "live":
         st.markdown(card_html, unsafe_allow_html=True)
         
         if idx == 3:
-            native_ad_html = '''<div class="content-card" style="display:flex; align-items:center; justify-content:space-between; padding: 12px 14px; margin-bottom: 16px;"><div style="display:flex; align-items:center; gap:12px; flex:1; min-width:0;"><div style="position:relative; width:80px; height:60px; flex-shrink:0; border-radius:6px; overflow:hidden; background:#2A2D35;"><img src="https://via.placeholder.com/180x135.png?text=AD" style="width:100%; height:100%; object-fit:cover; display:block;"><span style="position:absolute; top:4px; left:4px; background-color:#FF3333; color:#FFFFFF; font-size:0.5rem; font-weight:800; padding:1px 3px; border-radius:3px; line-height:1;">광고</span></div><div style="flex-grow:1; display:flex; flex-direction:column; justify-content:center; min-width:0;"><div style="font-size:0.85rem; font-weight:700; color:#FFFFFF; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:4px; line-height:1.2;">(스폰서) 추천 프로모션 및 제휴 상품 안내</div><div style="font-size:0.7rem; color:#9CA3AF; display:flex; align-items:center; gap:4px; line-height:1;"><span>🌐 공식 파트너 스폰서</span></div></div></div><a href="https://your-ad-link.com" target="_blank" style="flex-shrink:0; border-left:1px solid rgba(255,255,255,0.08); padding-left:12px; margin-left:8px; text-decoration:none;"><span style="font-size:0.75rem; font-weight:700; color:#00FFA3; background:rgba(0,255,163,0.1); padding:5px 10px; border-radius:6px; display:inline-block; line-height:1;">바로가기</span></a></div>'''
+            native_ad_html = '''<div class="content-card" style="display:flex; align-items:center; justify-content:space-between; padding: 12px 14px; margin-bottom: 16px;"><div style="display:flex; align-items:center; gap:12px; flex:1; min-width:0;"><div style="position:relative; width:80px; height:60px; flex-shrink:0; border-radius:6px; overflow:hidden; background:#2A2D35;"><img src="https://via.placeholder.com/180x135.png?text=AD" style="width:100%; height:100%; object-fit:cover; display:block;"><span style="position:absolute; top:4px; left:4px; background-color:#FF3333; color:#FFFFFF; font-size:0.5rem; font-weight:800; padding:1px 3px; border-radius:3px; line-height:1;">광고</span></div><div style="flex-grow:1; display:flex; flex-direction:column; justify-content:center; min-width:0;"><div style="font-size:0.85rem; font-weight:700; color:#FFFFFF; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:4px; line-height:1.2;">(스폰서) 추천 프로모션 및 제휴 상품 안내</div><div style="font-size:0.7rem; color:#9CA3AF; display:flex; align-items:center; gap:4px; line-height:1;"><span>🌐 공식 파트너 스폰서</span></div></div></div><a href="https://your-ad-link.com" target="_blank" style="flex-shrink:0; padding-left:12px; margin-left:8px; text-decoration:none;"><span style="font-size:0.75rem; font-weight:700; color:#00FFA3; background:rgba(0,255,163,0.1); padding:5px 10px; border-radius:6px; display:inline-block; line-height:1;">바로가기</span></a></div>'''
             st.markdown(native_ad_html, unsafe_allow_html=True)
 
 # ----------------------------------------------------
@@ -309,7 +311,7 @@ elif current_nav == "clip":
     st.markdown(f'''<div style="display:flex; align-items:center; gap:4px; margin-bottom:14px;"><div style="color:#00FFA3; width:16px; height:16px; flex-shrink:0; display:flex; align-items:center; justify-content:center; transform: translateY(-2px);">{SVG_ICONS['clip']}</div><div style="font-weight:800; font-size:1.05rem; color:#FFF; line-height:1; margin-top:1px;">MY 핫클립</div></div>''', unsafe_allow_html=True)
     
     if not bookmarks:
-        st.markdown("<div style='text-align:center; padding:30px; color:#9CA3AF; background:#1C1E26; border-radius:12px; border:1px solid rgba(255,255,255,0.1); font-size:0.85rem;'>즐겨찾기한 스트리머가 없습니다.<br>라이브 탭에서 즐겨찾기를 추가해 보세요!</div>", unsafe_allow_html=True)
+        st.markdown("<div style='text-align:center; padding:30px; color:#9CA3AF; background:#1C1E26; border-radius:12px; font-size:0.85rem;'>즐겨찾기한 스트리머가 없습니다.<br>라이브 탭에서 즐겨찾기를 추가해 보세요!</div>", unsafe_allow_html=True)
     else:
         for b_id, b_name in bookmarks.items():
             videos = fetch_clips_from_db(b_id)
@@ -346,7 +348,7 @@ elif current_nav == "clip":
                         </div>
                     </a>'''
             else:
-                card_html += f'''<div style="display:flex; gap:12px; align-items:center;"><div style="width:105px; height:58px; background:#2A2D35; border: 1px solid rgba(255,255,255,0.1); border-radius:6px; display:flex; align-items:center; justify-content:center; color:#9CA3AF; font-size:0.75rem; flex-shrink:0; position:relative; box-shadow: inset 0 0 10px rgba(0,0,0,0.5);"><span style="position:absolute; background:rgba(0,0,0,0.8); color:#FFF; font-size:0.6rem; padding:2px 4px; border-radius:3px; bottom:4px; right:4px; font-weight:600; line-height:1;">0:45</span>▶ 재생</div><div style="flex:1; min-width:0;"><div style="font-weight:700; color:#FFFFFF; font-size:1.0rem; margin-bottom:6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; line-height:1.2;">{html.escape(b_name)} 채널의 최신 영상이 없습니다.</div></div></div>'''
+                card_html += f'''<div style="display:flex; gap:12px; align-items:center;"><div style="width:105px; height:58px; background:#2A2D35; border-radius:6px; display:flex; align-items:center; justify-content:center; color:#9CA3AF; font-size:0.75rem; flex-shrink:0; position:relative;"><span style="position:absolute; background:rgba(0,0,0,0.8); color:#FFF; font-size:0.6rem; padding:2px 4px; border-radius:3px; bottom:4px; right:4px; font-weight:600; line-height:1;">0:45</span>▶ 재생</div><div style="flex:1; min-width:0;"><div style="font-weight:700; color:#FFFFFF; font-size:1.0rem; margin-bottom:6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; line-height:1.2;">{html.escape(b_name)} 채널의 최신 영상이 없습니다.</div></div></div>'''
             
             card_html += "</div>"
             st.markdown(card_html, unsafe_allow_html=True)
@@ -368,7 +370,7 @@ elif current_nav == "trend":
             tag_stats[tag] += viewers
 
     if not tag_stats:
-        st.markdown("<div style='text-align:center; padding:30px; color:#9CA3AF; background:#1C1E26; border-radius:12px; border:1px solid rgba(255,255,255,0.1); font-size:0.85rem;'>현재 수집된 트렌드 데이터가 없습니다.</div>", unsafe_allow_html=True)
+        st.markdown("<div style='text-align:center; padding:30px; color:#9CA3AF; background:#1C1E26; border-radius:12px; font-size:0.85rem;'>현재 수집된 트렌드 데이터가 없습니다.</div>", unsafe_allow_html=True)
     else:
         sorted_tags = sorted(tag_stats.items(), key=lambda x: x[1], reverse=True)[:10]
         
@@ -385,7 +387,7 @@ elif current_nav == "trend":
 elif current_nav == "my":
     st.markdown(f'''<div style="display:flex; align-items:center; gap:4px; margin-bottom:14px;"><div style="color:#00FFA3; width:16px; height:16px; flex-shrink:0; display:flex; align-items:center; justify-content:center; transform: translateY(-2px);">{SVG_ICONS['my']}</div><div style="font-weight:800; font-size:1.05rem; color:#FFF; line-height:1; margin-top:1px;">MY 채널</div></div>''', unsafe_allow_html=True)
     if not bookmarks:
-        st.markdown("<div style='text-align:center; padding:30px; color:#9CA3AF; background:#1C1E26; border-radius:12px; border:1px solid rgba(255,255,255,0.1); font-size:0.85rem;'>즐겨찾기한 스트리머가 없습니다.<br>라이브 탭에서 즐겨찾기를 추가해 보세요!</div>", unsafe_allow_html=True)
+        st.markdown("<div style='text-align:center; padding:30px; color:#9CA3AF; background:#1C1E26; border-radius:12px; font-size:0.85rem;'>즐겨찾기한 스트리머가 없습니다.<br>라이브 탭에서 즐겨찾기를 추가해 보세요!</div>", unsafe_allow_html=True)
     else:
         for b_id, b_name in bookmarks.items():
             
