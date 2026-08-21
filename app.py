@@ -80,6 +80,16 @@ st.markdown("""
     .bottom-nav-item.active { color: #00FFA3 !important; }
     .bottom-nav-item.active svg { transform: scale(1.15); filter: drop-shadow(0 0 6px rgba(0, 255, 163, 0.6)); }
     .bottom-nav-item.active span { font-weight: 800 !important; filter: drop-shadow(0 0 4px rgba(0, 255, 163, 0.3)); }
+
+    /* 🚨 브라우저의 기본 엑스박스(테두리+아이콘) 강제 삭제 마법 */
+    .stream-img {
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+        object-fit: cover; z-index: 2;
+        border: none !important; outline: none !important;
+        color: transparent !important; /* 대체 텍스트(alt) 숨김 */
+        text-indent: 100vw !important; /* 찢어진 이미지 아이콘을 화면 밖으로 밀어냄 */
+        background: transparent !important;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -238,19 +248,18 @@ if current_nav == "live":
         else: temp_bms[ch_id] = ch_name
         toggle_url = build_url("live", current_sort, temp_bms)
         
-        # 🚨 [해결] 마크다운 에러 방지를 위해 HTML 띄어쓰기를 전부 왼쪽으로 밀착시켰습니다.
         card_html = f"""<div class="{card_class}">
 <div class="overlay-badges-container">
 <span class="badge-live">LIVE</span>
 <span class="badge-viewers">{formatted_viewers}</span>
 </div>
 <a href="https://chzzk.naver.com/live/{ch_id}" target="_blank" style="text-decoration:none; color:inherit; display:block;">
-<div style="position:relative; width:100%; aspect-ratio:16/9; background:#1C1E26; border-bottom: 1px solid rgba(255,255,255,0.05); overflow:hidden;">
+<div style="position:relative; width:100%; aspect-ratio:16/9; background:#1C1E26; border-top-left-radius: 14px; border-top-right-radius: 14px; overflow:hidden;">
 <div style="position:absolute; top:0; left:0; width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#525C6D; z-index:1;">
 {SVG_ICONS['monitor']}
 <span style="font-size:0.85rem; font-weight:700;">화면 준비 중</span>
 </div>
-<img src="{thumb}" referrerpolicy="no-referrer" style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; color:transparent; z-index:2;" alt="">
+<img src="{thumb}" referrerpolicy="no-referrer" class="stream-img" alt="">
 </div>
 <div style="padding: 12px 14px 6px 14px;">
 <div style="font-weight:700; font-size:1.05rem; color: #FFFFFF; line-height: 1.4;">{html.escape(title)}</div>
@@ -328,7 +337,7 @@ elif current_nav == "clip":
 <div style="position:absolute; top:0; left:0; width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#525C6D; z-index:1;">
 {SVG_ICONS['play_empty']}
 </div>
-<img src="{v_thumb}" referrerpolicy="no-referrer" style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; color:transparent; z-index:2;" alt="">
+<img src="{v_thumb}" referrerpolicy="no-referrer" class="stream-img" alt="">
 <span style="position:absolute; background:rgba(0,0,0,0.8); color:#FFF; font-size:0.6rem; padding:2px 4px; border-radius:3px; bottom:4px; right:4px; font-weight:600; line-height:1; z-index:3;">재생</span>
 </div>
 <div style="flex:1; min-width:0;">
