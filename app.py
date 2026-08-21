@@ -68,11 +68,19 @@ st.markdown("""
     .segment-tab { flex: 1; text-align: center; padding: 7px 0 !important; font-size: 0.75rem !important; font-weight: 700; text-decoration: none !important; color: #9CA3AF !important; border-radius: 7px; display: block; line-height: 1.2; transition: all 0.2s ease; }
     .segment-tab.active { background-color: #00FFA3 !important; color: #111111 !important; }
     
-    /* 🚨 스트림 카드 레이아웃: 거슬리는 회색 테두리(border) 삭제, 그림자만 유지 */
-    .stream-card { position: relative !important; border: none !important; background: #1C1E26 !important; border-radius: 14px; margin-bottom: 16px !important; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4); overflow: hidden; }
-    .stream-card-random { position: relative !important; border: 2px solid #00FFA3 !important; background: #1C1E26 !important; border-radius: 14px; margin-bottom: 16px !important; box-shadow: 0 4px 12px rgba(0, 255, 163, 0.15); overflow: hidden; }
+    /* 🚨 스트림 카드 레이아웃: 모서리 깨짐 방지 하드웨어 가속 마스킹 추가 */
+    .stream-card { 
+        position: relative !important; border: none !important; background: #1C1E26 !important; 
+        border-radius: 14px; margin-bottom: 16px !important; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4); 
+        overflow: hidden; transform: translateZ(0); -webkit-mask-image: -webkit-radial-gradient(white, black); 
+    }
+    .stream-card-random { 
+        position: relative !important; border: 2px solid #00FFA3 !important; background: #1C1E26 !important; 
+        border-radius: 14px; margin-bottom: 16px !important; box-shadow: 0 4px 12px rgba(0, 255, 163, 0.15); 
+        overflow: hidden; transform: translateZ(0); -webkit-mask-image: -webkit-radial-gradient(white, black); 
+    }
     
-    /* 🚨 핫클립 등 일반 콘텐츠 카드 테두리 삭제 */
+    /* 핫클립 등 일반 콘텐츠 카드 테두리 삭제 */
     .content-card { background-color: #1C1E26; border: none !important; border-radius: 12px; padding: 12px 14px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); }
     
     /* 배지 영역 (LIVE, 시청자수) */
@@ -131,7 +139,9 @@ SVG_ICONS = {
     "my": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:100%; height:100%;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>',
     "my_fill": '<svg viewBox="0 0 24 24" fill="#00FFA3" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:100%;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>',
     "star": '<svg viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px; height:14px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>',
-    "star_fill": '<svg viewBox="0 0 24 24" fill="#00FFA3" xmlns="http://www.w3.org/2000/svg" style="width:14px; height:14px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>'
+    "star_fill": '<svg viewBox="0 0 24 24" fill="#00FFA3" xmlns="http://www.w3.org/2000/svg" style="width:14px; height:14px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>',
+    "monitor": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:32px; height:32px; margin-bottom:8px; opacity:0.5;"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>',
+    "play_empty": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px; height:18px; opacity:0.5;"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>'
 }
 
 # ----------------------------------------------------
@@ -278,6 +288,7 @@ if current_nav == "live":
         else: temp_bms[ch_id] = ch_name
         toggle_url = build_url("live", current_sort, temp_bms)
         
+        # 🚨 썸네일 컨테이너(1층)에도 똑같은 border-radius 14px을 적용하여 완벽하게 밀착
         card_html = f'''
         <div class="{card_class}">
             <div class="overlay-badges-container">
@@ -285,7 +296,15 @@ if current_nav == "live":
                 <span class="badge-viewers">{formatted_viewers}</span>
             </div>
             <a href="https://chzzk.naver.com/live/{ch_id}" target="_blank" style="text-decoration:none; color:inherit; display:block;">
-                <img src="{thumb}" referrerpolicy="no-referrer" class="stream-img" alt="">
+                <div style="position:relative; width:100%; aspect-ratio:16/9; background:#1C1E26; border-bottom: 1px solid rgba(255,255,255,0.05); border-top-left-radius: 14px; border-top-right-radius: 14px; overflow:hidden; display:flex; align-items:center; justify-content:center;">
+                    
+                    <div style="position:absolute; z-index:1; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#525C6D;">
+                        {SVG_ICONS['monitor']}
+                        <span style="font-size:0.85rem; font-weight:700;">화면 준비 중</span>
+                    </div>
+                    
+                    <img src="{thumb}" referrerpolicy="no-referrer" style="position:relative; z-index:2; width:100%; height:100%; object-fit:cover; color:transparent; background:transparent;" alt="">
+                </div>
                 <div style="padding: 12px 14px 6px 14px;">
                     <div style="font-weight:700; font-size:1.05rem; color: #FFFFFF; line-height: 1.4;">{html.escape(title)}</div>
                 </div>
@@ -337,9 +356,12 @@ elif current_nav == "clip":
                     
                     card_html += f'''<a href="https://chzzk.naver.com/video/{v_id}" target="_blank" style="text-decoration:none; color:inherit; display:block; {margin_style}">
                         <div style="display:flex; gap:12px; align-items:center;">
-                            <div style="width:105px; height:58px; border-radius:6px; flex-shrink:0; position:relative; overflow:hidden;">
-                                <img src="{v_thumb}" referrerpolicy="no-referrer" class="stream-img" style="border-bottom:none; aspect-ratio:auto;" alt="">
-                                <span style="position:absolute; background:rgba(0,0,0,0.8); color:#FFF; font-size:0.6rem; padding:2px 4px; border-radius:3px; bottom:4px; right:4px; font-weight:600; line-height:1; z-index:11;">재생</span>
+                            <div style="width:105px; height:58px; border-radius:6px; flex-shrink:0; position:relative; overflow:hidden; transform: translateZ(0);">
+                                <div style="position:absolute; z-index:1; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#525C6D;">
+                                    {SVG_ICONS['play_empty']}
+                                </div>
+                                <img src="{v_thumb}" referrerpolicy="no-referrer" style="position:relative; z-index:2; width:100%; height:100%; object-fit:cover; color:transparent; background:transparent;" alt="">
+                                <span style="position:absolute; background:rgba(0,0,0,0.8); color:#FFF; font-size:0.6rem; padding:2px 4px; border-radius:3px; bottom:4px; right:4px; font-weight:600; line-height:1; z-index:3;">재생</span>
                             </div>
                             <div style="flex:1; min-width:0;">
                                 <div style="font-weight:700; color:#FFFFFF; font-size:1.0rem; margin-bottom:6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; line-height:1.2;">{html.escape(v_title)}</div>
