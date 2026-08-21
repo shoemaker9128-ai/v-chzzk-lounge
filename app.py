@@ -80,15 +80,6 @@ st.markdown("""
     .bottom-nav-item.active { color: #00FFA3 !important; }
     .bottom-nav-item.active svg { transform: scale(1.15); filter: drop-shadow(0 0 6px rgba(0, 255, 163, 0.6)); }
     .bottom-nav-item.active span { font-weight: 800 !important; filter: drop-shadow(0 0 4px rgba(0, 255, 163, 0.3)); }
-
-    .stream-img {
-        position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-        object-fit: cover; z-index: 2;
-        border: none !important; outline: none !important; box-shadow: none !important;
-        color: transparent !important; 
-        text-indent: 100vw !important; 
-        background: transparent !important;
-    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -247,7 +238,7 @@ if current_nav == "live":
         else: temp_bms[ch_id] = ch_name
         toggle_url = build_url("live", current_sort, temp_bms)
         
-        # 🚨 [수정 완료] border-bottom 완전히 삭제
+        # 🚨 [완벽 해결] HTML <img> 태그 대신 SVG <image> 태그를 사용하여 브라우저 엑스박스 100% 차단
         card_html = f"""<div class="{card_class}">
 <div class="overlay-badges-container">
 <span class="badge-live">LIVE</span>
@@ -259,7 +250,9 @@ if current_nav == "live":
 {SVG_ICONS['monitor']}
 <span style="font-size:0.85rem; font-weight:700;">화면 준비 중</span>
 </div>
-<img src="{thumb}" referrerpolicy="no-referrer" class="stream-img" alt="">
+<svg style="position:absolute; top:0; left:0; width:100%; height:100%; z-index:2;" xmlns="http://www.w3.org/2000/svg">
+<image href="{thumb}" width="100%" height="100%" preserveAspectRatio="xMidYMid slice" referrerpolicy="no-referrer" />
+</svg>
 </div>
 <div style="padding: 12px 14px 6px 14px;">
 <div style="font-weight:700; font-size:1.05rem; color: #FFFFFF; line-height: 1.4;">{html.escape(title)}</div>
@@ -337,7 +330,9 @@ elif current_nav == "clip":
 <div style="position:absolute; top:0; left:0; width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#525C6D; z-index:1;">
 {SVG_ICONS['play_empty']}
 </div>
-<img src="{v_thumb}" referrerpolicy="no-referrer" class="stream-img" alt="">
+<svg style="position:absolute; top:0; left:0; width:100%; height:100%; z-index:2;" xmlns="http://www.w3.org/2000/svg">
+<image href="{v_thumb}" width="100%" height="100%" preserveAspectRatio="xMidYMid slice" referrerpolicy="no-referrer" />
+</svg>
 <span style="position:absolute; background:rgba(0,0,0,0.8); color:#FFF; font-size:0.6rem; padding:2px 4px; border-radius:3px; bottom:4px; right:4px; font-weight:600; line-height:1; z-index:3;">재생</span>
 </div>
 <div style="flex:1; min-width:0;">
