@@ -19,7 +19,6 @@ st.set_page_config(
 # ----------------------------------------------------
 st.markdown("""
 <style>
-    /* 1. 웹 브라우저 바닥부터 스트림릿의 모든 뼈대를 딥블랙으로 완벽하게 도배 (단차 원천 차단) */
     html, body, #root, .stApp, 
     [data-testid="stAppViewContainer"], 
     [data-testid="stMain"], 
@@ -29,20 +28,17 @@ st.markdown("""
         background-image: none !important;
     }
     
-    /* 기본 UI 숨김 */
     header[data-testid="stHeader"] { display: none !important; }
     #MainMenu { visibility: hidden !important; }
     footer { display: none !important; }
 
     @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
     
-    /* 폰트 및 기본 글자색 지정 */
     html, body, [class*="css"], .stApp {
         font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif !important;
         color: #F3F4F6 !important;
     }
 
-    /* 2. 모바일 프레임(420px) 중앙 고정 및 다크그레이 배경 적용 */
     div.block-container {
         background: #0F1015 !important;
         background-color: #0F1015 !important;
@@ -56,44 +52,29 @@ st.markdown("""
         box-shadow: 0 0 40px rgba(0, 0, 0, 0.9) !important;
     }
 
-    /* 헤더 로고 영역 */
     .app-header-container { display: flex; justify-content: space-between; align-items: center; padding: 4px 4px 16px 4px; margin-bottom: 16px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); gap: 12px; }
     .app-logo { font-size: clamp(1.6rem, 9vw, 2.2rem); font-weight: 900; letter-spacing: 0.5px; color: #FFFFFF; line-height: 1; font-style: italic; white-space: nowrap; transform: scaleX(1.08); transform-origin: left center; flex-shrink: 0; }
     .app-logo span { color: #00FFA3; text-shadow: 0 0 12px rgba(0, 255, 163, 0.4); }
     .app-subtitle-badge { display: flex; align-items: center; background-color: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); padding: 6px 10px; border-radius: 20px; font-size: clamp(0.7rem, 3.5vw, 0.8rem); color: #9CA3AF; font-weight: 600; letter-spacing: -0.3px; line-height: 1; white-space: nowrap; flex-shrink: 1; }
     .app-subtitle-badge span { color: #00FFA3; font-size: 0.4rem; margin-right: 6px; }
     
-    /* 탭 메뉴 박스 */
     .custom-segment-box { display: flex !important; flex-direction: row !important; justify-content: space-between !important; align-items: center !important; width: 100%; margin-bottom: 14px; background-color: #1C1E26; border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 10px; padding: 3px; gap: 3px; }
     .segment-tab { flex: 1; text-align: center; padding: 7px 0 !important; font-size: 0.75rem !important; font-weight: 700; text-decoration: none !important; color: #9CA3AF !important; border-radius: 7px; display: block; line-height: 1.2; transition: all 0.2s ease; }
     .segment-tab.active { background-color: #00FFA3 !important; color: #111111 !important; }
     
-    /* 🚨 스트림 카드 레이아웃: 화면 하얗게 깨지던 위험한 mask CSS 완전 삭제 */
-    .stream-card { 
-        position: relative !important; border: none !important; background: #1C1E26 !important; 
-        border-radius: 14px; margin-bottom: 16px !important; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4); 
-        overflow: hidden;
-    }
-    .stream-card-random { 
-        position: relative !important; border: 2px solid #00FFA3 !important; background: #1C1E26 !important; 
-        border-radius: 14px; margin-bottom: 16px !important; box-shadow: 0 4px 12px rgba(0, 255, 163, 0.15); 
-        overflow: hidden;
-    }
+    .stream-card { position: relative !important; border: none !important; background: #1C1E26 !important; border-radius: 14px; margin-bottom: 16px !important; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4); overflow: hidden; }
+    .stream-card-random { position: relative !important; border: 2px solid #00FFA3 !important; background: #1C1E26 !important; border-radius: 14px; margin-bottom: 16px !important; box-shadow: 0 4px 12px rgba(0, 255, 163, 0.15); overflow: hidden; }
     
-    /* 핫클립 등 일반 콘텐츠 카드 테두리 삭제 */
     .content-card { background-color: #1C1E26; border: none !important; border-radius: 12px; padding: 12px 14px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); }
     
-    /* 배지 영역 (LIVE, 시청자수) */
     .overlay-badges-container { position: absolute; top: 10px; left: 10px; display: flex; align-items: center; gap: 0px; z-index: 10; pointer-events: none; }
     .badge-live { background-color: #FF3333; color: #FFFFFF; padding: 4px 6px; border-top-left-radius: 5px; border-bottom-left-radius: 5px; font-size: 0.65rem; font-weight: 800; letter-spacing: 0.3px; box-shadow: 0 2px 4px rgba(0,0,0,0.4); display: flex; align-items: center; line-height: 1; }
     .badge-viewers { background-color: rgba(15, 16, 21, 0.95); border-top: 1px solid rgba(255, 255, 255, 0.2); border-bottom: 1px solid rgba(255, 255, 255, 0.2); border-right: 1px solid rgba(255, 255, 255, 0.2); color: #FFFFFF; padding: 4px 6px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; font-size: 0.65rem; font-weight: 700; box-shadow: 0 2px 4px rgba(0,0,0,0.4); display: flex; align-items: center; line-height: 1; }
     .tag-badge { display: inline-block; background: rgba(0, 255, 163, 0.08); color: #00FFA3; border: 1px solid rgba(0, 255, 163, 0.35); padding: 2px 5px; border-radius: 5px; font-size: 0.65rem; margin: 3px 3px 0 0; }
     
-    /* 알약(Pill) 모양 즐겨찾기 버튼 */
     .bm-btn { display: flex; align-items: center; justify-content: center; width: 32px; height: 24px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.15); background-color: transparent; transition: all 0.2s ease; }
     .bm-btn-active { display: flex; align-items: center; justify-content: center; width: 32px; height: 24px; border-radius: 12px; border: 1px solid rgba(0, 255, 163, 0.5); background-color: rgba(0, 255, 163, 0.1); transition: all 0.2s ease; }
 
-    /* 하단 네비게이션 바 중앙 고정 */
     .bottom-nav-container { position: fixed !important; bottom: 0 !important; left: 50% !important; transform: translateX(-50%) !important; width: 100% !important; max-width: 420px !important; background: rgba(24, 26, 32, 0.95) !important; backdrop-filter: blur(16px) !important; -webkit-backdrop-filter: blur(16px) !important; border-top: 1px solid rgba(255, 255, 255, 0.1) !important; border-left: 1px solid rgba(255, 255, 255, 0.05) !important; border-right: 1px solid rgba(255, 255, 255, 0.05) !important; box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.6) !important; display: flex !important; justify-content: space-around !important; padding: 10px 0 10px 0 !important; z-index: 900 !important; }
     .bottom-nav-item { color: #525C6D !important; text-decoration: none !important; display: flex; flex-direction: column; align-items: center; gap: 4px; transition: all 0.2s ease; }
     .bottom-nav-item.active { color: #00FFA3 !important; }
@@ -161,12 +142,10 @@ def fetch_clips_from_db(channel_id):
 def extract_dummy_tags(title):
     tags = []
     title_lower = title.lower() 
-    
     if "스텔" in title: tags.append("스텔라이브")
     if "이세" in title or "이세돌" in title: tags.append("이세돌")
     if "플레" in title or "플레이브" in title: tags.append("플레이브")
     if "홀로" in title: tags.append("홀로라이브")
-    
     if "마크" in title or "마인크래프트" in title: tags.append("마인크래프트")
     if "발로" in title or "발로란트" in title: tags.append("발로란트")
     if "롤" in title or "lol" in title_lower: tags.append("리그오브레전드")
@@ -174,11 +153,9 @@ def extract_dummy_tags(title):
     if "이터널" in title or "이리" in title: tags.append("이터널 리턴")
     if "철권" in title: tags.append("철권8")
     if "종겜" in title or "종합" in title: tags.append("종합게임")
-    
     if "저챗" in title or "노가리" in title or "수다" in title: tags.append("저스트채팅")
     if "노래" in title or "가창" in title or "우타와쿠" in title: tags.append("노래방")
     if "월드컵" in title or "이상형" in title: tags.append("이상형월드컵")
-    
     tags.append("버튜버")
     return tags
 
@@ -261,41 +238,50 @@ if current_nav == "live":
         else: temp_bms[ch_id] = ch_name
         toggle_url = build_url("live", current_sort, temp_bms)
         
-        # 🚨 구조를 가장 안전한 position: absolute 레이어 방식으로 교체 (브라우저 버그 원천차단)
-        card_html = f'''
-        <div class="{card_class}">
-            <div class="overlay-badges-container">
-                <span class="badge-live">LIVE</span>
-                <span class="badge-viewers">{formatted_viewers}</span>
-            </div>
-            <a href="https://chzzk.naver.com/live/{ch_id}" target="_blank" style="text-decoration:none; color:inherit; display:block;">
-                <div style="position:relative; width:100%; aspect-ratio:16/9; background:#1C1E26; overflow:hidden;">
-                    
-                    <!-- 1층: 에러 대비용 '화면 준비 중' 플레이스홀더 -->
-                    <div style="position:absolute; top:0; left:0; width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#525C6D; z-index:1;">
-                        {SVG_ICONS['monitor']}
-                        <span style="font-size:0.85rem; font-weight:700;">화면 준비 중</span>
-                    </div>
-                    
-                    <!-- 2층: 썸네일 이미지 (정상적일 때는 1층을 완벽히 덮음) -->
-                    <img src="{thumb}" referrerpolicy="no-referrer" style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; color:transparent; z-index:2;" alt="">
-                </div>
-                <div style="padding: 12px 14px 6px 14px;">
-                    <div style="font-weight:700; font-size:1.05rem; color: #FFFFFF; line-height: 1.4;">{html.escape(title)}</div>
-                </div>
-            </a>
-            <div style="padding: 0 14px 12px 14px;">
-                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:4px;">
-                    <a href="https://chzzk.naver.com/live/{ch_id}" target="_blank" style="text-decoration:none; font-weight:700; color:#00FFA3; font-size:0.95rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; line-height:1; display:block;">{html.escape(ch_name)}</a>
-                    <a href="{toggle_url}" target="_self" class="{btn_class}" style="text-decoration:none;">{bm_svg}</a>
-                </div>
-                <div style="margin-top:2px;">{tags_html}</div>
-            </div>
-        </div>'''
+        # 🚨 [해결] 마크다운 에러 방지를 위해 HTML 띄어쓰기를 전부 왼쪽으로 밀착시켰습니다.
+        card_html = f"""<div class="{card_class}">
+<div class="overlay-badges-container">
+<span class="badge-live">LIVE</span>
+<span class="badge-viewers">{formatted_viewers}</span>
+</div>
+<a href="https://chzzk.naver.com/live/{ch_id}" target="_blank" style="text-decoration:none; color:inherit; display:block;">
+<div style="position:relative; width:100%; aspect-ratio:16/9; background:#1C1E26; border-bottom: 1px solid rgba(255,255,255,0.05); overflow:hidden;">
+<div style="position:absolute; top:0; left:0; width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#525C6D; z-index:1;">
+{SVG_ICONS['monitor']}
+<span style="font-size:0.85rem; font-weight:700;">화면 준비 중</span>
+</div>
+<img src="{thumb}" referrerpolicy="no-referrer" style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; color:transparent; z-index:2;" alt="">
+</div>
+<div style="padding: 12px 14px 6px 14px;">
+<div style="font-weight:700; font-size:1.05rem; color: #FFFFFF; line-height: 1.4;">{html.escape(title)}</div>
+</div>
+</a>
+<div style="padding: 0 14px 12px 14px;">
+<div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:4px;">
+<a href="https://chzzk.naver.com/live/{ch_id}" target="_blank" style="text-decoration:none; font-weight:700; color:#00FFA3; font-size:0.95rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; line-height:1; display:block;">{html.escape(ch_name)}</a>
+<a href="{toggle_url}" target="_self" class="{btn_class}" style="text-decoration:none;">{bm_svg}</a>
+</div>
+<div style="margin-top:2px;">{tags_html}</div>
+</div>
+</div>"""
         st.markdown(card_html, unsafe_allow_html=True)
         
         if idx == 3:
-            native_ad_html = '''<div class="content-card" style="display:flex; align-items:center; justify-content:space-between; padding: 12px 14px; margin-bottom: 16px;"><div style="display:flex; align-items:center; gap:12px; flex:1; min-width:0;"><div style="position:relative; width:80px; height:60px; flex-shrink:0; border-radius:6px; overflow:hidden; background:#2A2D35;"><img src="https://via.placeholder.com/180x135.png?text=AD" style="width:100%; height:100%; object-fit:cover; display:block;"><span style="position:absolute; top:4px; left:4px; background-color:#FF3333; color:#FFFFFF; font-size:0.5rem; font-weight:800; padding:1px 3px; border-radius:3px; line-height:1;">광고</span></div><div style="flex-grow:1; display:flex; flex-direction:column; justify-content:center; min-width:0;"><div style="font-size:0.85rem; font-weight:700; color:#FFFFFF; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:4px; line-height:1.2;">(스폰서) 추천 프로모션 및 제휴 상품 안내</div><div style="font-size:0.7rem; color:#9CA3AF; display:flex; align-items:center; gap:4px; line-height:1;"><span>🌐 공식 파트너 스폰서</span></div></div></div><a href="https://your-ad-link.com" target="_blank" style="flex-shrink:0; padding-left:12px; margin-left:8px; text-decoration:none;"><span style="font-size:0.75rem; font-weight:700; color:#00FFA3; background:rgba(0,255,163,0.1); padding:5px 10px; border-radius:6px; display:inline-block; line-height:1;">바로가기</span></a></div>'''
+            native_ad_html = """<div class="content-card" style="display:flex; align-items:center; justify-content:space-between; padding: 12px 14px; margin-bottom: 16px;">
+<div style="display:flex; align-items:center; gap:12px; flex:1; min-width:0;">
+<div style="position:relative; width:80px; height:60px; flex-shrink:0; border-radius:6px; overflow:hidden; background:#2A2D35;">
+<img src="https://via.placeholder.com/180x135.png?text=AD" style="width:100%; height:100%; object-fit:cover; display:block;">
+<span style="position:absolute; top:4px; left:4px; background-color:#FF3333; color:#FFFFFF; font-size:0.5rem; font-weight:800; padding:1px 3px; border-radius:3px; line-height:1;">광고</span>
+</div>
+<div style="flex-grow:1; display:flex; flex-direction:column; justify-content:center; min-width:0;">
+<div style="font-size:0.85rem; font-weight:700; color:#FFFFFF; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:4px; line-height:1.2;">(스폰서) 추천 프로모션 및 제휴 상품 안내</div>
+<div style="font-size:0.7rem; color:#9CA3AF; display:flex; align-items:center; gap:4px; line-height:1;"><span>🌐 공식 파트너 스폰서</span></div>
+</div>
+</div>
+<a href="https://your-ad-link.com" target="_blank" style="flex-shrink:0; padding-left:12px; margin-left:8px; text-decoration:none;">
+<span style="font-size:0.75rem; font-weight:700; color:#00FFA3; background:rgba(0,255,163,0.1); padding:5px 10px; border-radius:6px; display:inline-block; line-height:1;">바로가기</span>
+</a>
+</div>"""
             st.markdown(native_ad_html, unsafe_allow_html=True)
 
 # ----------------------------------------------------
@@ -314,7 +300,14 @@ elif current_nav == "clip":
             if b_id in temp_bms: del temp_bms[b_id]
             toggle_url = build_url("clip", current_sort, temp_bms)
             
-            card_html = f'''<div class="content-card"><div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.05);"><div style="display:flex; align-items:center; gap:6px;"><span style="font-weight: 700; color: #00FFA3; font-size: 1.05rem; line-height:1;">{html.escape(b_name)}</span><span style="font-weight: 600; color: #E5E7EB; font-size: 0.8rem; line-height:1;">님의 최신 영상</span></div><a href="{toggle_url}" target="_self" class="bm-btn-active" style="text-decoration:none;">{SVG_ICONS['star_fill']}</a></div>'''
+            card_html = f"""<div class="content-card">
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.05);">
+<div style="display:flex; align-items:center; gap:6px;">
+<span style="font-weight: 700; color: #00FFA3; font-size: 1.05rem; line-height:1;">{html.escape(b_name)}</span>
+<span style="font-weight: 600; color: #E5E7EB; font-size: 0.8rem; line-height:1;">님의 최신 영상</span>
+</div>
+<a href="{toggle_url}" target="_self" class="bm-btn-active" style="text-decoration:none;">{SVG_ICONS['star_fill']}</a>
+</div>"""
             
             if videos:
                 for i, v in enumerate(videos):
@@ -329,24 +322,30 @@ elif current_nav == "clip":
                     
                     margin_style = "margin-bottom: 12px;" if i == 0 and len(videos) > 1 else ""
                     
-                    card_html += f'''<a href="https://chzzk.naver.com/video/{v_id}" target="_blank" style="text-decoration:none; color:inherit; display:block; {margin_style}">
-                        <div style="display:flex; gap:12px; align-items:center;">
-                            <div style="width:105px; height:58px; border-radius:6px; flex-shrink:0; position:relative; overflow:hidden; background:#1C1E26;">
-                                <div style="position:absolute; top:0; left:0; width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#525C6D; z-index:1;">
-                                    {SVG_ICONS['play_empty']}
-                                </div>
-                                <img src="{v_thumb}" referrerpolicy="no-referrer" style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; color:transparent; z-index:2;" alt="">
-                                <span style="position:absolute; background:rgba(0,0,0,0.8); color:#FFF; font-size:0.6rem; padding:2px 4px; border-radius:3px; bottom:4px; right:4px; font-weight:600; line-height:1; z-index:3;">재생</span>
-                            </div>
-                            <div style="flex:1; min-width:0;">
-                                <div style="font-weight:700; color:#FFFFFF; font-size:1.0rem; margin-bottom:6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; line-height:1.2;">{html.escape(v_title)}</div>
-                                <div style="color:#9CA3AF; font-size:0.75rem; font-weight:500; line-height:1;">조회수 {v_views:,}회</div>
-                            </div>
-                        </div>
-                    </a>'''
+                    card_html += f"""<a href="https://chzzk.naver.com/video/{v_id}" target="_blank" style="text-decoration:none; color:inherit; display:block; {margin_style}">
+<div style="display:flex; gap:12px; align-items:center;">
+<div style="width:105px; height:58px; border-radius:6px; flex-shrink:0; position:relative; overflow:hidden; background:#1C1E26;">
+<div style="position:absolute; top:0; left:0; width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#525C6D; z-index:1;">
+{SVG_ICONS['play_empty']}
+</div>
+<img src="{v_thumb}" referrerpolicy="no-referrer" style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; color:transparent; z-index:2;" alt="">
+<span style="position:absolute; background:rgba(0,0,0,0.8); color:#FFF; font-size:0.6rem; padding:2px 4px; border-radius:3px; bottom:4px; right:4px; font-weight:600; line-height:1; z-index:3;">재생</span>
+</div>
+<div style="flex:1; min-width:0;">
+<div style="font-weight:700; color:#FFFFFF; font-size:1.0rem; margin-bottom:6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; line-height:1.2;">{html.escape(v_title)}</div>
+<div style="color:#9CA3AF; font-size:0.75rem; font-weight:500; line-height:1;">조회수 {v_views:,}회</div>
+</div>
+</div>
+</a>"""
             else:
-                card_html += f'''<div style="display:flex; gap:12px; align-items:center;"><div style="width:105px; height:58px; background:#2A2D35; border-radius:6px; display:flex; align-items:center; justify-content:center; color:#9CA3AF; font-size:0.75rem; flex-shrink:0; position:relative;"><span style="position:absolute; background:rgba(0,0,0,0.8); color:#FFF; font-size:0.6rem; padding:2px 4px; border-radius:3px; bottom:4px; right:4px; font-weight:600; line-height:1;">0:45</span>▶ 재생</div><div style="flex:1; min-width:0;"><div style="font-weight:700; color:#FFFFFF; font-size:1.0rem; margin-bottom:6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; line-height:1.2;">{html.escape(b_name)} 채널의 최신 영상이 없습니다.</div></div></div>'''
-            
+                card_html += f"""<div style="display:flex; gap:12px; align-items:center;">
+<div style="width:105px; height:58px; background:#2A2D35; border-radius:6px; display:flex; align-items:center; justify-content:center; color:#9CA3AF; font-size:0.75rem; flex-shrink:0; position:relative;">
+<span style="position:absolute; background:rgba(0,0,0,0.8); color:#FFF; font-size:0.6rem; padding:2px 4px; border-radius:3px; bottom:4px; right:4px; font-weight:600; line-height:1;">0:45</span>▶ 재생
+</div>
+<div style="flex:1; min-width:0;">
+<div style="font-weight:700; color:#FFFFFF; font-size:1.0rem; margin-bottom:6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; line-height:1.2;">{html.escape(b_name)} 채널의 최신 영상이 없습니다.</div>
+</div>
+</div>"""
             card_html += "</div>"
             st.markdown(card_html, unsafe_allow_html=True)
 
