@@ -81,13 +81,12 @@ st.markdown("""
     .bottom-nav-item.active svg { transform: scale(1.15); filter: drop-shadow(0 0 6px rgba(0, 255, 163, 0.6)); }
     .bottom-nav-item.active span { font-weight: 800 !important; filter: drop-shadow(0 0 4px rgba(0, 255, 163, 0.3)); }
 
-    /* 🚨 브라우저의 기본 엑스박스(테두리+아이콘) 강제 삭제 마법 */
     .stream-img {
         position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
         object-fit: cover; z-index: 2;
-        border: none !important; outline: none !important;
-        color: transparent !important; /* 대체 텍스트(alt) 숨김 */
-        text-indent: 100vw !important; /* 찢어진 이미지 아이콘을 화면 밖으로 밀어냄 */
+        border: none !important; outline: none !important; box-shadow: none !important;
+        color: transparent !important; 
+        text-indent: 100vw !important; 
         background: transparent !important;
     }
 </style>
@@ -248,6 +247,7 @@ if current_nav == "live":
         else: temp_bms[ch_id] = ch_name
         toggle_url = build_url("live", current_sort, temp_bms)
         
+        # 🚨 [수정 완료] border-bottom 완전히 삭제
         card_html = f"""<div class="{card_class}">
 <div class="overlay-badges-container">
 <span class="badge-live">LIVE</span>
